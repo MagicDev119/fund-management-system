@@ -1,20 +1,13 @@
 <template>
   <b-card class="text-center">
-    <b-avatar
-      class="mb-1"
-      :variant="`light-${color}`"
-      size="45"
-    >
-      <feather-icon
-        size="21"
-        :icon="icon"
-      />
+    <b-avatar class="mb-1" :variant="`light-${color}`" size="45">
+      <feather-icon size="21" :icon="icon" />
     </b-avatar>
     <div class="truncate">
-      <h2 class="mb-25 font-weight-bolder">
-        {{ statistic }}
-      </h2>
-      <span>{{ statisticTitle }}</span>
+      <h6 class="mb-1 font-weight-bolder">
+        {{ statisticTitle }}
+      </h6>
+      <h2>{{ statistic }}</h2>
     </div>
   </b-card>
 </template>

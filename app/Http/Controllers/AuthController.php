@@ -94,9 +94,7 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         return response()->json([
-            'data' => [
-                'userData' => $request->user()
-            ]
+            'userData' => $request->user()
         ]);
     }
 
@@ -110,7 +108,7 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
 
         return response()->json([
-        'message' => 'Successfully logged out'
+            'message' => 'Successfully logged out'
         ]);
 
     }

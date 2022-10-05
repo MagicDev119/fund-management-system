@@ -13,11 +13,18 @@ class CreatePasswordResetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->index();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
+         if (Schema::hasTable('password_resets')) {
+            // Schema::table('users', function (Blueprint $table) {
+            //     $table->string('role', 20);
+            //     $table->string('accessible_tab', 20);
+            // });
+        } else {
+            Schema::create('password_resets', function (Blueprint $table) {
+                $table->string('email')->index();
+                $table->string('token');
+                $table->timestamp('created_at')->nullable();
+            });
+        }
     }
 
     /**

@@ -184,8 +184,20 @@ export default {
           }).then(response => {
             let { userData } = response.data
             userData.role = 'admin'
+            userData.ability = [
+              {
+                action: 'read',
+                subject: 'Auth',
+              },
+              {
+                action: 'manage',
+                subject: 'Auth',
+              }
+            ]
             useJwt.setToken(response.data.accessToken)
             localStorage.setItem('userData', JSON.stringify(userData))
+            localStorage.setItem('accessToken', response.data.accessToken)
+            this.$ability.update(userData.ability)
             // ? Because we are showing eCommerce app's cart items count in navbar
             // this.$store.commit('app-ecommerce/UPDATE_CART_ITEMS_COUNT', userData.extras.eCommerceCartItemsCount)
 
@@ -196,7 +208,7 @@ export default {
                 component: ToastificationContent,
                 position: 'top-right',
                 props: {
-                  title: `Welcome ${userData.fullName || userData.username}`,
+                  title: `Welcome ${userData.name || userData.username}`,
                   icon: 'CoffeeIcon',
                   variant: 'success',
                   text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,

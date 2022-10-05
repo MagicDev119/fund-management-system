@@ -16,13 +16,20 @@
     </div>
 
     <b-navbar-nav class="nav align-items-center ml-auto">
+      <fund />
+      <date-time />
+      <template #button-content>
+        <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="btn-icon">
+          <feather-icon icon="SettingsIcon" />
+        </b-button>
+      </template>
       <b-nav-item-dropdown right toggle-class="d-flex align-items-center dropdown-user-link" class="dropdown-user">
         <template #button-content>
           <div class="d-sm-flex d-none user-nav">
             <p class="user-name font-weight-bolder mb-0">
-              John Doe
+              {{ userData.name || userData.username }}
             </p>
-            <span class="user-status">Admin</span>
+            <span class="user-status">{{ userData.role }}</span>
           </div>
           <b-avatar size="40" variant="light-primary" badge :src="require('@/assets/images/avatars/13-small.png')"
             class="badge-minimal" badge-variant="success" />
@@ -33,29 +40,14 @@
           <span>Profile</span>
         </b-dropdown-item>
 
-        <b-dropdown-item link-class="d-flex align-items-center">
-          <feather-icon size="16" icon="MailIcon" class="mr-50" />
-          <span>Inbox</span>
-        </b-dropdown-item>
-
-        <b-dropdown-item link-class="d-flex align-items-center">
-          <feather-icon size="16" icon="CheckSquareIcon" class="mr-50" />
-          <span>Task</span>
-        </b-dropdown-item>
-
-        <b-dropdown-item link-class="d-flex align-items-center">
-          <feather-icon size="16" icon="MessageSquareIcon" class="mr-50" />
-          <span>Chat</span>
-        </b-dropdown-item>
-
         <b-dropdown-divider />
 
         <b-dropdown-item link-class="d-flex align-items-center" @click="logout()">
           <feather-icon size="16" icon="LogOutIcon" class="mr-50" />
           <span>
-            <b-link :to="{name:'user-login'}">
-              <small>Logout</small>
-            </b-link>
+            <!-- <b-link :to="{name:'user-login'}"> -->
+            <small>Logout</small>
+            <!-- </b-link> -->
           </span>
         </b-dropdown-item>
       </b-nav-item-dropdown>
@@ -68,7 +60,11 @@ import {
   BLink, BNavbarNav, BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar,
 } from 'bootstrap-vue'
 import DarkToggler from '@core/layouts/components/app-navbar/components/DarkToggler.vue'
-
+import useJwt from '@/auth/jwt/useJwt'
+import Fund from './FundDropdown.vue'
+import DateTime from './DateTime.vue'
+import { initialAbility } from '@/libs/acl/config'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 export default {
   components: {
     BLink,
@@ -77,9 +73,16 @@ export default {
     BDropdownItem,
     BDropdownDivider,
     BAvatar,
+    Fund,
+    DateTime,
 
     // Navbar Components
     DarkToggler,
+  },
+  data() {
+    return {
+      userData: JSON.parse(localStorage.getItem('userData')),
+    }
   },
   props: {
     toggleVerticalMenuActive: {
@@ -89,28 +92,38 @@ export default {
   },
   methods: {
     logout() {
-      console.log('logout')
-      this.$http.get('/api/auth/logout').then(response => {
-        const { userData } = response.data
-        useJwt.setToken(null)
-        localStorage.setItem('userData', null)
-        this.$router.replace('user/login').then(() => {
-          this.$toast({
-            component: ToastificationContent,
-            position: 'top-right',
-            props: {
-              title: `Welcome ${userData.fullName || userData.username}`,
-              icon: 'CoffeeIcon',
-              variant: 'success',
-              text: `User logout successful!`,
-            },
+      this.$http.get('/sanctum/csrf-cookie').then(response => {
+        this.$http.get('/api/auth/logout', {
+          headers: {
+            'Authorization': localStorage.getItem('accessToken')
+          }
+        }).then(response => {
+          console.log('logout')
+          const { userData } = response.data
+          useJwt.setToken(null)
+          localStorage.clear()
+          this.$ability.update(initialAbility)
+          console.log('logout')
+          this.$router.replace({ name: 'user-login' }).then(() => {
+            this.$toast({
+              component: ToastificationContent,
+              position: 'top-right',
+              props: {
+                title: ``,
+                icon: 'CoffeeIcon',
+                variant: 'success',
+                text: `User logout successful!`,
+              },
+            })
           })
         })
+          .catch(error => {
+            useJwt.setToken(null)
+            localStorage.clear()
+            this.$ability.update(initialAbility)
+            this.$refs.loginValidation.setErrors(error)
+          })
       })
-        .catch(error => {
-          console.log(error)
-          this.$refs.loginValidation.setErrors(error)
-        })
     }
   },
 }

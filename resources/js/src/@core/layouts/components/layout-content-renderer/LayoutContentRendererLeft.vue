@@ -1,26 +1,16 @@
 <template>
-  <div
-    class="app-content content"
-    :class="[{'show-overlay': $store.state.app.shallShowOverlay}, $route.meta.contentClass]"
-  >
+  <div class="app-content content"
+    :class="[{'show-overlay': $store.state.app.shallShowOverlay}, $route.meta.contentClass]">
     <div class="content-overlay" />
     <div class="header-navbar-shadow" />
-    <transition
-      :name="routerTransition"
-      mode="out-in"
-    >
-      <div
-        class="content-area-wrapper"
-        :class="contentWidth === 'boxed' ? 'container p-0' : null"
-      >
-        <slot name="breadcrumb">
-          <app-breadcrumb />
-        </slot>
-        <portal-target
-          name="content-renderer-sidebar-left"
-          slim
-        />
-        <div class="content-right">
+    <slot name="breadcrumb">
+      <app-breadcrumb />
+    </slot>
+    <transition :name="routerTransition" mode="out-in">
+
+      <div class="content-area-wrapper border-0" :class="contentWidth === 'boxed' ? 'container p-0' : null">
+        <portal-target name="content-renderer-sidebar-left" slim />
+        <div class="content-right border-0">
           <div class="content-wrapper">
             <div class="content-body">
               <slot />

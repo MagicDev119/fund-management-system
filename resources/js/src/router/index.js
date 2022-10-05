@@ -12,6 +12,8 @@ import valuations from './routes/valuations'
 import reports from './routes/reports'
 import generalLedger from './routes/generalLedger'
 import user from './routes/user'
+import fund from './routes/fund'
+import asset from './routes/asset'
 
 Vue.use(VueRouter)
 
@@ -27,6 +29,9 @@ const router = new VueRouter({
       name: 'home',
       component: () => import('@/views/Home.vue'),
       meta: {
+        layout: 'full',
+        action: 'read',
+        resource: 'Auth',
         pageTitle: 'Home',
         breadcrumb: [
           {
@@ -44,6 +49,8 @@ const router = new VueRouter({
     ...reports,
     ...generalLedger,
     ...user,
+    ...fund,
+    ...asset,
     {
       path: '/second-page',
       name: 'second-page',
@@ -64,6 +71,8 @@ const router = new VueRouter({
       component: () => import('@/views/error/Error404.vue'),
       meta: {
         layout: 'full',
+        action: 'read',
+        resource: 'Auth'
       },
     },
     {
@@ -76,14 +85,15 @@ const router = new VueRouter({
 router.beforeEach((to, _, next) => {
   const isLoggedIn = isUserLoggedIn()
 
+  console.log('isLoggedIn', to)
   if (!canNavigate(to)) {
     // Redirect to login if not logged in
+  console.log('isLoggedIn', isLoggedIn)
     if (!isLoggedIn) return next({ name: 'user-login' })
 
     // If logged in => not authorized
     return next({ name: 'user-not-authorized' })
   }
-  console.log(to)
   // Redirect if logged in
   if (to.meta.redirectIfLoggedIn && isLoggedIn) {
     const userData = getUserData()

@@ -5,6 +5,7 @@ export default [
     component: () => import('@/views/user/Login.vue'),
     meta: {
       layout: 'full',
+      action: 'read',
       resource: 'Auth',
       redirectIfLoggedIn: true,
     },
