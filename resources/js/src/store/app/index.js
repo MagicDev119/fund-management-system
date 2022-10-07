@@ -5,6 +5,14 @@ export default {
   state: {
     windowWidth: 0,
     shallShowOverlay: false,
+    showFundDropdown: false,
+    showPortfolioDropdown: false,
+    showDateDropdown: false,
+    showDateQuaterDropdown: false,
+    selectedFund: null,
+    selectedPortfolio: null,
+    selectedDate: new Date(),
+    selectedDateQuater: new Date()
   },
   getters: {
     currentBreakPoint: state => {
@@ -23,6 +31,40 @@ export default {
     TOGGLE_OVERLAY(state, val) {
       state.shallShowOverlay = val !== undefined ? val : !state.shallShowOverlay
     },
+    SHOW_FUND_DROPDOWN(state, val) {
+      state.showFundDropdown = val !== undefined ? val : state.showFundDropdown
+    },
+    SHOW_PORTFOLIO_DROPDOWN(state, val) {
+      state.showPortfolioDropdown = val !== undefined ? val : state.showPortfolioDropdown
+    },
+    SHOW_DATE_DROPDOWN(state, val) {
+      state.showDateDropdown = val !== undefined ? val : state.showDateDropdown
+    },
+    SHOW_DATE_QUATER_DROPDOWN(state, val) {
+      state.showDateQuaterDropdown = val !== undefined ? val : state.showDateQuaterDropdown
+    },
+    SELECTED_FUND(state, val) {
+      state.selectedFund = val !== undefined ? val : state.selectedFund
+    },
+    SELECTED_PORTFOLIO(state, val) {
+      state.selectedPortfolio = val !== undefined ? val : state.selectedPortfolio
+    },
+    SELECTED_DATE(state, val) {
+      state.selectedDate = val !== undefined ? val : state.selectedDate
+    },
+    SELECTED_DATEQUATER(state, val) {
+      state.selectedDateQuater = val !== undefined ? val : state.selectedDateQuater
+    },
+    INIT_NAV_STATE(state) {
+      state.showFundDropdown = false
+      state.showPortfolioDropdown = false
+      state.showDateDropdown = false
+      state.showDateQuaterDropdown = false
+      state.selectedFund = null
+      state.selectedPortfolio = null
+      state.selectedDate = new Date()
+      state.selectedDateQuater = new Date()
+    }
   },
   actions: {},
 }

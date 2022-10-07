@@ -16,6 +16,7 @@ class CreateSectorIndustryTable extends Migration
         Schema::create('sector_industry', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('type'); // sector, industry
             $table->string('slug');
             $table->softDeletes();
             $table->timestamps();

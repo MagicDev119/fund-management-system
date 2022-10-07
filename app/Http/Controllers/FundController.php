@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FundController extends Controller
 {
@@ -23,9 +24,8 @@ class FundController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'userData' => 'a'
-        ]);
+        $fund = Auth::user()->funds()->with('fundFieldGroups.fundFields.fundData', 'fundType')->get();
+        return response()->json($fund);
     }
 
     /**
@@ -46,7 +46,17 @@ class FundController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => ['required', 'string'],
+            'type' => ['required', 'string']
+        ]);
+
+        Industry::create([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name)
+        ]);
+
+        return redirect()->route('admin.industries');
     }
 
     /**

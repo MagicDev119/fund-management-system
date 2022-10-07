@@ -17,11 +17,12 @@ class CreateAssetFieldTable extends Migration
             $table->id();
             $table->foreignId('group_id')->constrained('asset_field_group');
             $table->string('name');
-            $table->string('type');
-            $table->boolean('isVisible');
-            $table->boolean('isEditable');
-            $table->boolean('isTimestampField');
-            $table->boolean('isRequired');
+            $table->string('slug');
+            $table->foreignId('field_type_id')->constrained('field_type');
+            $table->boolean('isVisible')->default(true);
+            $table->boolean('isEditable')->default(true);
+            $table->boolean('isTimestampField')->default(true);
+            $table->boolean('isRequired')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

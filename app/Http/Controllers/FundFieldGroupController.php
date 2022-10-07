@@ -7,13 +7,24 @@ use Illuminate\Http\Request;
 class FundFieldGroupController extends Controller
 {
     /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
+    
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        $userSetFieldGroup = Auth::user()->fundFieldGroup;
+        return $userSetFieldGroup;
     }
 
     /**

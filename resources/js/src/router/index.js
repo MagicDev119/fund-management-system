@@ -14,6 +14,7 @@ import generalLedger from './routes/generalLedger'
 import user from './routes/user'
 import fund from './routes/fund'
 import asset from './routes/asset'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -84,21 +85,53 @@ const router = new VueRouter({
 
 router.beforeEach((to, _, next) => {
   const isLoggedIn = isUserLoggedIn()
+console.log('----------------------')
 
-  console.log('isLoggedIn', to)
-  if (!canNavigate(to)) {
-    // Redirect to login if not logged in
-  console.log('isLoggedIn', isLoggedIn)
-    if (!isLoggedIn) return next({ name: 'user-login' })
-
-    // If logged in => not authorized
-    return next({ name: 'user-not-authorized' })
+  if (to.meta.show) {
+    to.meta.show.forEach(each => {
+      switch (each) {
+        case 'fund':
+          store.commit('app/SHOW_FUND_DROPDOWN', true)
+          break;
+        case 'portfolio':
+          store.commit('app/SHOW_PORTFOLIO_DROPDOWN', true)
+          break;
+        case 'date':
+          store.commit('app/SHOW_DATE_DROPDOWN', true)
+          break;
+        case 'quater':
+          store.commit('app/SHOW_DATE_QUATER_DROPDOWN', true)
+          break;
+        default:
+          break;
+      }
+    })
+  } else {
+    store.commit('app/INIT_NAV_STATE')
   }
-  // Redirect if logged in
+
   if (to.meta.redirectIfLoggedIn && isLoggedIn) {
     const userData = getUserData()
-    next(getHomeRouteForLoggedInUser(userData ? userData.role : null))
+    next({name: 'fund-dashboard'})
+  } else if (!canNavigate(to)) {
+    if (!isLoggedIn) return next({ name: 'user-login' })
+
+    return next({ name: 'user-not-authorized' })
   }
+  // console.log('isLoggedIn', to)
+  // if (!canNavigate(to)) {
+  //   // Redirect to login if not logged in
+  // console.log('isLoggedIn', isLoggedIn)
+  //   if (!isLoggedIn) return next({ name: 'user-login' })
+
+  //   // If logged in => not authorized
+  //   return next({ name: 'user-not-authorized' })
+  // }
+  // // Redirect if logged in
+  // if (to.meta.redirectIfLoggedIn && isLoggedIn) {
+  //   const userData = getUserData()
+  //   next(getHomeRouteForLoggedInUser(userData ? userData.role : null))
+  // }
 
   return next()
 })

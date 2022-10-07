@@ -15,12 +15,12 @@ class CreateFundFieldGroupTable extends Migration
     {
         Schema::create('fund_field_group', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('fund_id')->constrained('fund');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('fund_id')->nullable()->constrained('fund');
+            $table->foreignId('user_id')->nullable()->constrained('users');
             $table->string('group_name');
             $table->string('slug');
-            $table->boolean('isVisible');
-            $table->tinyInteger('type'); // 0: default, 1: user_set, 2: fund
+            $table->boolean('isVisible')->default(true);
+            $table->tinyInteger('type')->default(1); // 1: default, 2: user_set, 3: fund
             $table->softDeletes();
             $table->timestamps();
         });

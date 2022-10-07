@@ -13,6 +13,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call([
+            FieldTypeSeeder::class,
+            DropdownListSeeder::class,
+            FundTypeSeeder::class,
+            UserRoleSeeder::class,
+            AccessibleTabSeeder::class,
+            AdminRoleSeeder::class,
+            UserSeeder::class,
+            SectorIndustrySeeder::class,
+            FundSeeder::class,
+            AssetSeeder::class,
+            FundFieldGroupSeeder::class,
+            FundFieldSeeder::class,
+            AssetFieldGroupSeeder::class,
+            AssetFieldSeeder::class,
+            FundDataSeeder::class,
+            AssetDataSeeder::class,
+
+            GeneralLedgerSeeder::class
+        ]);
     }
 }

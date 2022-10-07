@@ -19,8 +19,8 @@ class CreateCapTable extends Migration
             // $table->foreignId('fund_id')->constrained('fund');
             $table->string('name');
             $table->tinyInteger('instruments');
-            $table->integar('issuedOfShares');
-            $table->integar('fullyDilutedOfShares');
+            $table->integer('issuedOfShares');
+            $table->integer('fullyDilutedOfShares');
             $table->bigInteger('capitalContribution');
             $table->date('set_date');
             $table->softDeletes();

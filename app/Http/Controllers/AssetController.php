@@ -7,13 +7,24 @@ use Illuminate\Http\Request;
 class AssetController extends Controller
 {
     /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
+    
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        $fund = Auth::user()->funds()->with('fundFieldGroups.fundFields.fundData', 'fundType')->get();
+        return response()->json($fund);
     }
 
     /**

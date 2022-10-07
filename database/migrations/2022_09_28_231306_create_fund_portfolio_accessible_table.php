@@ -22,10 +22,8 @@ class CreateFundPortfolioAccessibleTable extends Migration
             Schema::create('fund_portfolio_accessible', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained('users');
-                $table->foreignId('fund_id')->constrained('fund');
-                $table->foreignId('asset_id')->constrained('asset');
-                $table->string('type', 20);
-                $table->boolean('isAccessible');
+                $table->foreignId('fund_id')->nullable()->constrained('fund');
+                $table->foreignId('asset_id')->nullable()->constrained('asset');
                 $table->softDeletes();
                 $table->timestamps();
             });

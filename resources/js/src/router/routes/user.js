@@ -36,6 +36,7 @@ export default [
     component: () => import('@/views/user/NotAuthorized.vue'),
     meta: {
       layout: 'full',
+      action: 'read',
       resource: 'Auth'
     },
   }

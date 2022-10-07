@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\AdminRole;
 use Validator;
 
 class AuthController extends Controller
@@ -21,16 +22,20 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'firstName' => 'string',
+            'lastName' => 'string',
             'email'=>'required|string|unique:users',
             'password'=>'required|string',
             'c_password' => 'required|same:password'
         ]);
 
         $user = new User([
-            'name'  => $request->name,
+            'first_name'  => $request->firstName,
+            'last_name'  => $request->lastName,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'admin_role' => AdminRole::GENERAL,
+            'email_verified_at' => now()
         ]);
 
         if($user->save()){
@@ -42,7 +47,16 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
                 "userData" => [
                     'email' => $request->email,
-                    'name'  => $request->name
+                    'firstName'  => $request->firstName,
+                    'lastName' => $request->lastName,
+                    'role' => $user->userRoles(),
+                    'accessibleTabs' => $user->accessibleTabs(),
+                    'accessibleFunds' => $user->accessibleFunds(),
+                    'accessibleAssets' => $user->accessibleAssets(),
+                    'ability' => [
+                        'action' => 'manage',
+                        'subject' => 'Auth'
+                    ]
                 ]
             ],201);
         }
@@ -70,9 +84,9 @@ class AuthController extends Controller
         $credentials = request(['email','password']);
         if(!Auth::attempt($credentials))
         {
-        return response()->json([
-            'message' => 'Unauthorized'
-        ],401);
+            return response()->json([
+                'message' => 'Unauthorized'
+            ],401);
         }
 
         $user = $request->user();
@@ -82,7 +96,21 @@ class AuthController extends Controller
         return response()->json([
             'accessToken' =>$token,
             'token_type' => 'Bearer',
-            "userData" => $request->user()
+            "userData" => [
+                'email' => $user->email,
+                'firstName'  => $user->first_name,
+                'lastName' => $user->last_name,
+                'role' => $user->userRoles(),
+                'accessibleTabs' => $user->accessibleTabs(),
+                'accessibleFunds' => $user->accessibleFunds(),
+                'accessibleAssets' => $user->accessibleAssets(),
+                'ability' => [
+                    [
+                        'action' => 'manage',
+                        'subject' => 'Auth'
+                    ]
+                ]
+            ]
         ]);
     }
 

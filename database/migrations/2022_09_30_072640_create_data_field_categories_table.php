@@ -17,8 +17,8 @@ class CreateDataFieldCategoriesTable extends Migration
             $table->id();
             $table->foreignId('asset_id')->constrained('asset');
             $table->string('category_name');
-            $table->tinyInteger('type'); // 0: default, 1: asset
-            $table->boolean('isLocked'); // 0:unLocked 1:locked
+            $table->tinyInteger('type')->default(1); // 1: default, 2: asset
+            $table->boolean('isLocked')->default(2); // 1:unLocked 2:locked
             $table->softDeletes();
             $table->timestamps();
         });

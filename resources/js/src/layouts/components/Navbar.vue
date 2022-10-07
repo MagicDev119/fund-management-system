@@ -15,9 +15,12 @@
       <dark-Toggler class="d-none d-lg-block" />
     </div>
 
-    <b-navbar-nav class="nav align-items-center ml-auto">
-      <fund />
+    <b-navbar-nav class="nav align-items-center ml-auto" v-if={showFund}>
+      {{ showFund }}
+      <fund-dropdown />
+      <!-- <portfolio-dropdown /> -->
       <date-time />
+      <!-- <date-quater /> -->
       <template #button-content>
         <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="btn-icon">
           <feather-icon icon="SettingsIcon" />
@@ -27,9 +30,9 @@
         <template #button-content>
           <div class="d-sm-flex d-none user-nav">
             <p class="user-name font-weight-bolder mb-0">
-              {{ userData.name || userData.username }}
+              {{ userData.firstName }} {{ userData.lastName }}
             </p>
-            <span class="user-status">{{ userData.role }}</span>
+            <span class="user-status">{{ userData.firstName }} {{ userData.lastName }}</span>
           </div>
           <b-avatar size="40" variant="light-primary" badge :src="require('@/assets/images/avatars/13-small.png')"
             class="badge-minimal" badge-variant="success" />
@@ -61,10 +64,13 @@ import {
 } from 'bootstrap-vue'
 import DarkToggler from '@core/layouts/components/app-navbar/components/DarkToggler.vue'
 import useJwt from '@/auth/jwt/useJwt'
-import Fund from './FundDropdown.vue'
+import FundDropdown from './FundDropdown.vue'
 import DateTime from './DateTime.vue'
+// import PortfolioDropdown from './PortfolioDropdown.vue'
+// import DateQuater from './DateQuater.vue'
 import { initialAbility } from '@/libs/acl/config'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
+import store from '@/store'
 export default {
   components: {
     BLink,
@@ -73,7 +79,7 @@ export default {
     BDropdownItem,
     BDropdownDivider,
     BAvatar,
-    Fund,
+    FundDropdown,
     DateTime,
 
     // Navbar Components
@@ -82,6 +88,7 @@ export default {
   data() {
     return {
       userData: JSON.parse(localStorage.getItem('userData')),
+      showFund: false
     }
   },
   props: {
@@ -126,5 +133,8 @@ export default {
       })
     }
   },
+  created() {
+    this.showFund = store.state.app.showFundDropdown
+  }
 }
 </script>

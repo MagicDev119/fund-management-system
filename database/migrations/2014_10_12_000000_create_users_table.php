@@ -13,29 +13,19 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable('users')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->string('role', 20);
-                $table->string('accessible_tab', 20);
-                $table->renameColumn('name', 'first_name');
-                $table->string('last_name');
-                $table->softDeletes();
-            });
-        } else {
-            Schema::create('users', function (Blueprint $table) {
-                $table->id();
-                $table->string('first_name');
-                $table->string('last_name');
-                $table->string('email')->unique();
-                $table->timestamp('email_verified_at')->nullable();
-                $table->string('role', 20);  // 1: accepted 0: denied, 000111010110100
-                $table->string('accessible_tab', 20); // 1: accepted 0: denied, 000111010110100
-                $table->string('password');
-                $table->softDeletes();
-                $table->rememberToken();
-                $table->timestamps();
-            });
-        }
+        
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->foreignId('admin_role')->constrained('admin_role');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
+            $table->softDeletes();
+            $table->timestamps();
+        });
     }
 
     /**

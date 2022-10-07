@@ -33,11 +33,21 @@
           <!-- form -->
           <validation-observer ref="registerForm" #default="{invalid}">
             <b-form class="auth-register-form mt-2" @submit.prevent="register">
-              <!-- username -->
-              <b-form-group label="Username" label-for="register-username">
-                <validation-provider #default="{ errors }" name="Username" vid="username" rules="required">
-                  <b-form-input id="register-username" v-model="username" name="register-username"
-                    :state="errors.length > 0 ? false:null" placeholder="johndoe" />
+
+              <!-- firstName -->
+              <b-form-group label="FirstName" label-for="register-firstName">
+                <validation-provider #default="{ errors }" name="FirstName" vid="firstName" rules="required">
+                  <b-form-input id="register-firstName" v-model="firstName" name="register-firstName"
+                    :state="errors.length > 0 ? false:null" placeholder="first name" />
+                  <small class="text-danger">{{ errors[0] }}</small>
+                </validation-provider>
+              </b-form-group>
+
+              <!-- lastName -->
+              <b-form-group label="LastName" label-for="register-lastName">
+                <validation-provider #default="{ errors }" name="LastName" vid="lastName" rules="required">
+                  <b-form-input id="register-lastName" v-model="lastName" name="register-lastName"
+                    :state="errors.length > 0 ? false:null" placeholder="last name" />
                   <small class="text-danger">{{ errors[0] }}</small>
                 </validation-provider>
               </b-form-group>
@@ -46,7 +56,7 @@
               <b-form-group label="Email" label-for="register-email">
                 <validation-provider #default="{ errors }" name="Email" vid="email" rules="required|email">
                   <b-form-input id="register-email" v-model="userEmail" name="register-email"
-                    :state="errors.length > 0 ? false:null" placeholder="john@example.com" />
+                    :state="errors.length > 0 ? false:null" placeholder="email" />
                   <small class="text-danger">{{ errors[0] }}</small>
                 </validation-provider>
               </b-form-group>
@@ -67,12 +77,12 @@
                 </validation-provider>
               </b-form-group>
 
-              <b-form-group>
+              <!-- <b-form-group>
                 <b-form-checkbox id="register-privacy-policy" v-model="status" name="checkbox-1">
                   I agree to
                   <b-link>privacy policy & terms</b-link>
                 </b-form-checkbox>
-              </b-form-group>
+              </b-form-group> -->
 
               <b-button variant="primary" block type="submit" :disabled="invalid">
                 Sign up
@@ -163,7 +173,8 @@ export default {
   data() {
     return {
       status: '',
-      username: '',
+      firstName: '',
+      lastName: '',
       userEmail: '',
       password: '',
       sideImg: require('@/assets/images/pages/register-v2.svg'),
@@ -190,7 +201,8 @@ export default {
       this.$refs.registerForm.validate().then(success => {
         if (success) {
           this.$http.post('/api/auth/register', {
-            name: this.username,
+            firstName: this.firstName,
+            lastName: this.lastName,
             email: this.userEmail,
             password: this.password,
             c_password: this.password

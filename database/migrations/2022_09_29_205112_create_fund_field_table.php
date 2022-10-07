@@ -17,9 +17,10 @@ class CreateFundFieldTable extends Migration
             $table->id();
             $table->foreignId('group_id')->constrained('fund_field_group');
             $table->string('name');
-            $table->string('type');
-            $table->boolean('isVisible');
-            $table->boolean('isRequired');
+            $table->string('slug');
+            $table->foreignId('field_type_id')->constrained('field_type');
+            $table->boolean('isVisible')->default(true);
+            $table->boolean('isRequired')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

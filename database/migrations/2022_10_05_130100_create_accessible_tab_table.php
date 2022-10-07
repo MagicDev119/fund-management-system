@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFundTable extends Migration
+class CreateAccessibleTabTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateFundTable extends Migration
      */
     public function up()
     {
-        Schema::create('fund', function (Blueprint $table) {
+        Schema::create('accessible_tab', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
             $table->string('name');
-            $table->string('slug');
+            $table->tinyInteger('order');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +29,6 @@ class CreateFundTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('fund');
+        Schema::dropIfExists('accessible_tab');
     }
 }

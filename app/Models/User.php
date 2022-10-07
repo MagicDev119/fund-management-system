@@ -18,9 +18,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'admin_role',
+        'email_verified_at'
     ];
 
     /**
@@ -41,4 +44,45 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the fundFieldGroup associated with the user.
+     */
+    public function fundFieldGroups()
+    {
+        return $this->hasMany(FundFieldGroup::class);
+    }
+
+    /**
+     * Get the assetFieldGroup associated with the user.
+     */
+    public function assetFieldGroups()
+    {
+        return $this->hasMany(AssetFieldGroup::class);
+    }
+
+    public function adminRole()
+    {
+        return $this->belongsTo(AdminRole::class);
+    }
+
+    public function userRoles() {
+        return $this->belongsToMany(UserRole::class, 'user_role_relation', 'user_id', 'role_id');
+    }
+
+    public function accessibleTabs() {
+        return $this->belongsToMany(AccessibleTab::class, 'user_accessible_tab_relation', 'user_id', 'accessible_tab_id');
+    }
+
+    public function accessibleFunds() {
+    	return $this->belongsToMany(Fund::class, 'fund_portfolio_accessible', 'user_id', 'fund_id');
+    }
+
+    public function accessibleAssets() {
+    	return $this->belongsToMany(Asset::class, 'fund_portfolio_accessible', 'user_id', 'asset_id');
+    }
+
+    public function funds() {
+        return $this->belongsToMany(Fund::class, 'user_fund_relation', 'user_id', 'fund_id');
+    }
 }

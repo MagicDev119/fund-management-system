@@ -183,17 +183,17 @@ export default {
             c_password: this.password
           }).then(response => {
             let { userData } = response.data
-            userData.role = 'admin'
-            userData.ability = [
-              {
-                action: 'read',
-                subject: 'Auth',
-              },
-              {
-                action: 'manage',
-                subject: 'Auth',
-              }
-            ]
+            // userData.role = 'admin'
+            // userData.ability = [
+            //   {
+            //     action: 'read',
+            //     subject: 'Auth',
+            //   },
+            //   {
+            //     action: 'manage',
+            //     subject: 'Auth',
+            //   }
+            // ]
             useJwt.setToken(response.data.accessToken)
             localStorage.setItem('userData', JSON.stringify(userData))
             localStorage.setItem('accessToken', response.data.accessToken)
@@ -203,15 +203,15 @@ export default {
 
             console.log(';', response)
             // ? This is just for demo purpose. Don't think CASL is role based in this case, we used role in if condition just for ease
-            this.$router.replace(getHomeRouteForLoggedInUser('admin')).then(() => {
+            this.$router.replace({ name: 'fund-dashboard' }).then(() => {
               this.$toast({
                 component: ToastificationContent,
                 position: 'top-right',
                 props: {
-                  title: `Welcome ${userData.name || userData.username}`,
+                  title: `Welcome ${userData.firstName} ${userData.lastName}`,
                   icon: 'CoffeeIcon',
                   variant: 'success',
-                  text: `You have successfully logged in as ${userData.role}. Now you can start to explore!`,
+                  text: `You have successfully logged in. Now you can start to explore!`,
                 },
               })
             })

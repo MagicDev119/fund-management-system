@@ -15,12 +15,12 @@ class CreateAssetFieldGroupTable extends Migration
     {
         Schema::create('asset_field_group', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('asset_id')->constrained('asset');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('asset_id')->nullable()->constrained('asset');
+            $table->foreignId('user_id')->nullable()->constrained('users');
             $table->string('group_name');
             $table->string('slug');
-            $table->boolean('isVisible');
-            $table->tinyInteger('type'); // 0: default, 1: user_set, 2: asset
+            $table->boolean('isVisible')->default(true);
+            $table->tinyInteger('type')->default(1); // 1: default, 2: user_set, 3: asset
             $table->softDeletes();
             $table->timestamps();
         });
