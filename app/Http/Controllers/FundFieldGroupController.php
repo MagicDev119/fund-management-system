@@ -33,7 +33,7 @@ class FundFieldGroupController extends Controller
             $value['fieldCnt'] = count($value->fundFields);
             $fieldGroups[] = $value;
         }
-        $fieldType = FundFieldGroup::get();
+        $fieldType = FieldType::get();
 
         return response()->json([
             'fieldGroups' => $fieldGroups,
