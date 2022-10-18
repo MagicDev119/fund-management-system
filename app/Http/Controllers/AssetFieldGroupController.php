@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-use \App\models\AssetFieldGroup;
-use \App\models\FieldType;
+use \App\Models\FieldType;
 
 class AssetFieldGroupController extends Controller
 {
