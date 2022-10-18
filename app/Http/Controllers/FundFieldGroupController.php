@@ -5,11 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 use \App\models\FundFieldGroup;
-use \App\models\FundField;
-use \App\Models\User;
+use \App\models\FieldType;
 
 class FundFieldGroupController extends Controller
 {
@@ -35,7 +33,7 @@ class FundFieldGroupController extends Controller
             $value['fieldCnt'] = count($value->fundFields);
             $fieldGroups[] = $value;
         }
-        $fieldType = FundField::get();
+        $fieldType = FieldType::get();
 
         return response()->json([
             'fieldGroups' => $fieldGroups,
