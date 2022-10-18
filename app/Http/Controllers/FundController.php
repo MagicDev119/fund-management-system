@@ -132,6 +132,7 @@ class FundController extends Controller
 
         return response()->json([
             'fund_type' => $fundType,
+            'FieldType' => FieldType::get(),
             'userSetFundFieldGroups' => $userSetFundFieldGroups
         ]);
     }
