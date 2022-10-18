@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 use \App\models\FundFieldGroup;
-use \App\models\FieldType;
+use App\models\FieldType;
 
 class FundFieldGroupController extends Controller
 {
