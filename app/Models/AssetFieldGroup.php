@@ -10,6 +10,14 @@ class AssetFieldGroup extends Model
     use HasFactory;
     protected $table = 'asset_field_group';
     
+    protected $fillable = [
+        'group_name',
+        'type',
+        'isVisible',
+        'slug',
+        'asset_id',
+        'user_id'
+    ];
     /**
      * Get the user that owns the assetFieldGroup.
      */
@@ -26,5 +34,11 @@ class AssetFieldGroup extends Model
     public function assetFields()
     {
         return $this->hasMany(AssetField::class, 'group_id');
+    }
+
+    public static function getDefaults()
+    {
+        $defaultAssetFieldGroups = AssetFieldGroup::where('type', 1)->get();
+        return $defaultAssetFieldGroups;
     }
 }

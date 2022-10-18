@@ -17,6 +17,7 @@ class CreateFieldTypeTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
+            $table->string('cate_name')->nullable();
             $table->string('resource')->nullable();
             $table->string('table')->nullable();
             $table->softDeletes();

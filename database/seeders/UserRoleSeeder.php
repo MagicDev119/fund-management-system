@@ -19,19 +19,23 @@ class UserRoleSeeder extends Seeder
             [
                 'id' => 1,
                 'name' => 'Can lock / unlock portfolio valuations',
-                'order' => 1
+                'order' => 1,
+                'isDefault' => false
             ], [
                 'id' => 2,
                 'name' => 'Can edit / upload general ledger',
-                'order' => 2
+                'order' => 2,
+                'isDefault' => false
             ], [
                 'id' => 3,
                 'name' => 'Can edit data.collection',
-                'order' => 3
+                'order' => 3,
+                'isDefault' => true
             ], [
                 'id' => 4,
                 'name' => 'Can edit cap table',
-                'order' => 4
+                'order' => 4,
+                'isDefault' => true
             ]
         ]);
     }

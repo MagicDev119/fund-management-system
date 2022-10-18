@@ -19,7 +19,7 @@ class AssetFactory extends Factory
             'name' => $name,
             'slug' => Str::slug($name),
             'legal_name' => $this->faker->realText($maxNbChars = 20),
-            'fund_id' => \App\Models\Fund::get()->random()->id
+            'user_id' => \App\Models\User::get()->random()->id
         ];
         return $result;
     }

@@ -18,30 +18,50 @@
 
       <!-- Todo List -->
       <vue-perfect-scrollbar :settings="perfectScrollbarSettings" class="todo-task-list-wrapper list-group scroll-area">
-        <draggable v-model="fundFields" handle=".draggable-task-handle" tag="ul" class="todo-task-list media-list">
-          <li v-for="fundField in fundFields" :key="fundField.id" class="todo-item px-1"
-            :class="{ 'completed': fundField.isVisible }">
+        <draggable v-model="assetFields" handle=".draggable-task-handle" tag="ul" class="todo-task-list media-list">
+          <li v-for="assetField in assetFields" :key="assetField.id" class="todo-item px-1"
+            :class="{ 'completed': assetField.isVisible }">
             <div class="todo-title-wrapper">
               <div class="todo-title-area">
                 <div class="title-wrapper">
                   <feather-icon icon="ListIcon" class="d-inline" size="17" />
-                  <span class="todo-title text-dark">{{ fundField.name }}</span>
+                  <span class="todo-title text-dark">{{ assetField.name }}</span>
                 </div>
               </div>
               <div class="todo-item-action">
-                <span class="font-italic text-secondary">{{ fundField.field_type.name }}</span>
+                <span class="font-italic text-secondary">{{ assetField.field_type.name }}</span>
                 <div class="content-header-title pr-0 mx-1">&nbsp;</div>
-                <b-button v-if="fundField.isRequired" variant="outline-primary p-75 mr-1"
-                  @click="updateFundField({id: fundField.id, isRequired: !fundField.isRequired})">
+                <b-button v-if="assetField.isRequired" variant="outline-primary p-75 mr-1"
+                  @click="updateAssetField({id: assetField.id, isRequired: !assetField.isRequired})">
                   <small class="font-weight-bolder">Required</small>
                 </b-button>
-                <b-button v-if="!fundField.isRequired" variant="outline-secondary p-75 mr-1" class="light-grey-button"
-                  @click="updateFundField({id: fundField.id, isRequired: !fundField.isRequired})">
+                <b-button v-if="!assetField.isRequired" variant="outline-secondary p-75 mr-1" class="light-grey-button"
+                  @click="updateAssetField({id: assetField.id, isRequired: !assetField.isRequired})">
                   <small>Required</small>
                 </b-button>
+
+                <b-button v-if="assetField.isEditable" variant="outline-primary p-75 mr-1"
+                  @click="updateAssetField({id: assetField.id, isEditable: !assetField.isEditable})">
+                  <small class="font-weight-bolder">Editable on list page</small>
+                </b-button>
+                <b-button v-if="!assetField.isEditable" variant="outline-secondary p-75 mr-1" class="light-grey-button"
+                  @click="updateAssetField({id: assetField.id, isEditable: !assetField.isEditable})">
+                  <small>Editable on list page</small>
+                </b-button>
+
+                <b-button v-if="assetField.isTimestampField" variant="outline-primary p-75 mr-1"
+                  @click="updateAssetField({id: assetField.id, isTimestampField: !assetField.isTimestampField})">
+                  <small class="font-weight-bolder">Timestamp field</small>
+                </b-button>
+                <b-button v-if="!assetField.isTimestampField" variant="outline-secondary p-75 mr-1"
+                  class="light-grey-button"
+                  @click="updateAssetField({id: assetField.id, isTimestampField: !assetField.isTimestampField})">
+                  <small>Timestamp field</small>
+                </b-button>
+
                 <div>
-                  <b-form-checkbox v-model="fundField.isVisible" class="custom-control-primary" name="check-button"
-                    switch @change="updateFundField({id: fundField.id, isVisible: $event})">
+                  <b-form-checkbox v-model="assetField.isVisible" class="custom-control-primary" name="check-button"
+                    switch @change="updateAssetField({id: assetField.id, isVisible: $event})">
                     <span class="switch-icon-left">
                       <feather-icon icon="CheckIcon" />
                     </span>
@@ -51,7 +71,7 @@
                   </b-form-checkbox>
                 </div>
                 <div class="content-header-title pr-0">&nbsp;</div>
-                <b-button variant="flat-dark" class="btn-icon" @click="removeFundField(fundField.id)">
+                <b-button variant="flat-dark" class="btn-icon" @click="removeAssetField(assetField.id)">
                   <feather-icon icon="Trash2Icon" size="17" />
                 </b-button>
               </div>
@@ -59,7 +79,7 @@
 
           </li>
         </draggable>
-        <div class="no-results" :class="{'show': !fundFields.length}">
+        <div class="no-results" :class="{'show': !assetFields.length}">
           <h5>No Items Found</h5>
         </div>
       </vue-perfect-scrollbar>
@@ -67,13 +87,14 @@
 
     <!-- Sidebar -->
     <portal to="content-renderer-sidebar-left">
-      <fund-input-setting-left-sidebar :field-groups="fieldGroups"
-        :is-fund-field-handler-sidebar-active.sync="isFundFieldHandlerSidebarActive" :class="{'show': true}" />
+      <asset-input-setting-left-sidebar :field-groups="fieldGroups"
+        :is-asset-field-handler-sidebar-active.sync="isAssetFieldHandlerSidebarActive" :class="{'show': true}" />
     </portal>
 
     <!-- modal new field-->
     <b-modal id="modal-new-field" ref="modal-new-field" cancel-variant="outline-secondary" ok-title="Create"
-      cancel-title="Close" centered title="Create new field" @show="resetModal" @hidden="resetModal" @ok="addFundField">
+      cancel-title="Close" centered title="Create new field" @show="resetModal" @hidden="resetModal"
+      @ok="addAssetField">
       <b-form>
         <b-form-group :state="nameState" label="Name" label-for="name-input" invalid-feedback="Name is required">
           <b-form-input id="name-input" v-model="name" @change="changeFieldName($event)" :state="nameState" required />
@@ -98,9 +119,9 @@ import {
 import { useRouter } from '@core/utils/utils'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import draggable from 'vuedraggable'
-import FundInputSettingLeftSidebar from './FundInputSettingLeftSidebar.vue'
-import fundStoreModule from './fundStoreModule'
-
+import AssetInputSettingLeftSidebar from './AssetInputSettingLeftSidebar.vue'
+import assetStoreModule from './assetStoreModule'
+import { onMounted, getCurrentInstance } from "vue";
 export default {
   components: {
     draggable,
@@ -116,7 +137,7 @@ export default {
     VuePerfectScrollbar,
 
     // App SFC
-    FundInputSettingLeftSidebar,
+    AssetInputSettingLeftSidebar,
   },
   directives: {
     'b-modal': VBModal,
@@ -166,14 +187,14 @@ export default {
     },
   },
   setup() {
-    const FUND_FIELD_STORE_MODULE_NAME = 'fund-field'
+    const ASSET_FIELD_STORE_MODULE_NAME = 'asset-field'
 
     // Register module
-    if (!store.hasModule(FUND_FIELD_STORE_MODULE_NAME)) store.registerModule(FUND_FIELD_STORE_MODULE_NAME, fundStoreModule)
+    if (!store.hasModule(ASSET_FIELD_STORE_MODULE_NAME)) store.registerModule(ASSET_FIELD_STORE_MODULE_NAME, assetStoreModule)
 
     // UnRegister on leave
     onUnmounted(() => {
-      if (store.hasModule(FUND_FIELD_STORE_MODULE_NAME)) store.unregisterModule(FUND_FIELD_STORE_MODULE_NAME)
+      if (store.hasModule(ASSET_FIELD_STORE_MODULE_NAME)) store.unregisterModule(ASSET_FIELD_STORE_MODULE_NAME)
     })
 
     const { route } = useRouter()
@@ -181,10 +202,10 @@ export default {
     watch(routeParams, () => {
 
       const selected = fieldGroups.value.filter(each => each.slug == routeParams.value.group_slug)
-      if (selected.length !== 0) fetchFundFields(selected[0].id);
+      if (selected.length !== 0) fetchAssetFields(selected[0].id);
     })
 
-    const fundFields = ref([])
+    const assetFields = ref([])
     const fieldType = ref([])
     const newFieldName = ref('')
     const newFieldType = ref('')
@@ -197,39 +218,37 @@ export default {
       newFieldName.value = e
     }
 
-    const addFundField = () => {
+    const addAssetField = () => {
       if (fieldGroups.value.length == 0) return
       let selected = fieldGroups.value.filter(each => each.slug == routeParams.value.group_slug)
       selected = (selected.length !== 0) ? selected : [fieldGroups.value[0]]
 
-      store.dispatch('fund-field/addFundField', {
+      store.dispatch('asset-field/addAssetField', {
         id: selected[0].id,
         name: newFieldName.value,
         type: newFieldType.value
       })
         .then(() => {
-          fetchFundFields(selected[0].id)
+          fetchAssetFields(selected[0].id)
         })
     }
-    const removeFundField = (id) => {
+    const removeAssetField = (id) => {
       let selected = fieldGroups.value.filter(each => each.slug == routeParams.value.group_slug)
       selected = (selected.length !== 0) ? selected : [fieldGroups.value[0]]
 
-      store.dispatch('fund-field/removeFundField', { id })
+      store.dispatch('asset-field/removeAssetField', { id })
         .then(() => {
           // eslint-disable-next-line no-use-before-define
-          fetchFundFields(selected[0].id)
+          fetchAssetFields(selected[0].id)
         })
     }
-    const updateFundField = fundFieldData => {
+    const updateAssetField = assetFieldData => {
       let selected = fieldGroups.value.filter(each => each.slug == routeParams.value.group_slug)
       selected = (selected.length !== 0) ? selected : [fieldGroups.value[0]]
-      console.log(fundFieldData.isRequired)
-      console.log(fundFieldData.isVisible)
-      store.dispatch('fund-field/updateFundField', fundFieldData)
+      store.dispatch('asset-field/updateAssetField', assetFieldData)
         .then(() => {
           // eslint-disable-next-line no-use-before-define
-          fetchFundFields(selected[0].id)
+          fetchAssetFields(selected[0].id)
         })
     }
 
@@ -237,25 +256,25 @@ export default {
       maxScrollbarLength: 150,
     }
 
-    const isFundFieldHandlerSidebarActive = ref(false)
+    const isAssetFieldHandlerSidebarActive = ref(false)
 
     const fieldGroups = ref([
     ])
 
-    const fetchFundFields = (id) => {
-      store.dispatch('fund-field/fetchFundFields', {
+    const fetchAssetFields = (id) => {
+      store.dispatch('asset-field/fetchAssetFields', {
         id
       })
         .then(response => {
           if (response.data)
-            fundFields.value = response.data.map(each => {
+            assetFields.value = response.data.map(each => {
               return { ...each, isVisible: each.isVisible ? true : false }
             })
         })
     }
 
-    const fetchFundFieldGroups = () => {
-      store.dispatch('fund-field/fetchFundFieldGroups', {
+    const fetchAssetFieldGroups = () => {
+      store.dispatch('asset-field/fetchAssetFieldGroups', {
       })
         .then(response => {
           if (response.data) {
@@ -265,7 +284,7 @@ export default {
                 slug: each.slug,
                 fieldCnt: each.fieldCnt,
                 id: each.id,
-                route: { name: 'fund-inputsetting-group', params: { group_slug: each.slug } }
+                route: { name: 'asset-inputsetting-group', params: { group_slug: each.slug } }
               }
             });
             console.log(fieldGroups.value[0])
@@ -276,26 +295,26 @@ export default {
               }
             })
             const selected = fieldGroups.value.filter(each => each.slug == routeParams.value.group_slug)
-            fetchFundFields(selected.length === 0 ? fieldGroups.value[0].id : selected[0].id);
+            fetchAssetFields(selected.length === 0 ? fieldGroups.value[0].id : selected[0].id);
           }
         })
     }
 
-    fetchFundFieldGroups()
+    fetchAssetFieldGroups()
 
     return {
-      fundFields,
-      removeFundField,
-      addFundField,
-      updateFundField,
+      assetFields,
+      removeAssetField,
+      addAssetField,
+      updateAssetField,
       fieldGroups,
       fieldType,
-      fetchFundFields,
+      fetchAssetFields,
       perfectScrollbarSettings,
-      fetchFundFieldGroups,
+      fetchAssetFieldGroups,
       changeFieldName,
       changeFieldType,
-      isFundFieldHandlerSidebarActive,
+      isAssetFieldHandlerSidebarActive,
     }
   },
 }

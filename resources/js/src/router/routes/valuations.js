@@ -6,6 +6,7 @@ export default [
     meta: {
       action: 'manage',
       resource: 'Auth',
+      show: ['fund', 'quarter'],
       pageTitle: 'Valuation',
       breadcrumb: [
         {
@@ -25,6 +26,7 @@ export default [
     meta: {
       action: 'manage',
       resource: 'Auth',
+      show: ['fund'],
       pageTitle: 'Historical',
       breadcrumb: [
         {

@@ -17,7 +17,7 @@ class CreateUserFundRelationTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('fund_id')->constrained('fund');
-            $table->string('relation', 10); // 0000000001 only last index for now: 1: investor, 0: investeer
+            $table->string('relation', 10)->default('1'); // 0000000001 only last index for now: 1: investor, 0: investeer
             $table->softDeletes();
             $table->timestamps();
         });

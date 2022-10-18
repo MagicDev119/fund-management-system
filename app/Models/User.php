@@ -85,4 +85,8 @@ class User extends Authenticatable
     public function funds() {
         return $this->belongsToMany(Fund::class, 'user_fund_relation', 'user_id', 'fund_id');
     }
+
+    public function assets() {
+        return $this->hasMany(Asset::class);
+    }
 }

@@ -21,13 +21,15 @@ class FieldTypeSeeder extends Seeder
                 'name' => 'Serial Number',
                 'slug' => Str::slug('Serial Number'),
                 'resource' => '',
-                'table' => ''
+                'table' => '',
+                'cate_name' => ''
             ], [
                 'id' => 2,
                 'name' => 'Text',
                 'slug' => Str::slug('Text'),
                 'resource' => '',
-                'table' => ''
+                'table' => '',
+                'cate_name' => ''
             ],/* [
                 'id' => 3,
                 'name' => 'Dropdown',
@@ -39,37 +41,43 @@ class FieldTypeSeeder extends Seeder
                 'name' => 'Dropdown',
                 'slug' => Str::slug('Dropdown'),
                 'resource' => 'country',
-                'table' => ''
+                'table' => '',
+                'cate_name' => 'Location'
             ], [
                 'id' => 5,
                 'name' => 'Number',
                 'slug' => Str::slug('Number'),
                 'resource' => '',
-                'table' => ''
+                'table' => '',
+                'cate_name' => ''
             ], [
                 'id' => 6,
                 'name' => 'Date',
                 'slug' => Str::slug('Date'),
                 'resource' => '',
-                'table' => ''
+                'table' => '',
+                'cate_name' => ''
             ], [
                 'id' => 7,
                 'name' => 'Boolean',
                 'slug' => Str::slug('Boolean'),
                 'resource' => '',
-                'table' => ''
+                'table' => '',
+                'cate_name' => ''
             ], [
                 'id' => 8,
                 'name' => 'Autocomplete',
                 'slug' => Str::slug('Autocomplete'),
                 'resource' => '',
-                'table' => ''
+                'table' => '',
+                'cate_name' => ''
             ], [
                 'id' => 9,
                 'name' => 'String',
                 'slug' => Str::slug('String'),
                 'resource' => '',
-                'table' => ''
+                'table' => '',
+                'cate_name' => ''
             ],/* [
                 'id' => 10,
                 'name' => 'Dropdown',
@@ -81,37 +89,43 @@ class FieldTypeSeeder extends Seeder
                 'name' => 'Dropdown',
                 'slug' => Str::slug('Dropdown'),
                 'resource' => '',
-                'table' => 'users'
+                'table' => 'users',
+                'cate_name' => 'Owner'
             ], [
                 'id' => 12,
                 'name' => 'Dropdown',
                 'slug' => Str::slug('Dropdown'),
                 'resource' => '',
-                'table' => 'asset'
+                'table' => 'asset',
+                'cate_name' => 'Asset class'
             ], [
                 'id' => 13,
                 'name' => 'Dropdown',
                 'slug' => Str::slug('Dropdown'),
                 'resource' => 'private_public',
-                'table' => 'dropdown_list'
+                'table' => 'dropdown_list',
+                'cate_name' => 'Private vs Public'
             ], [
                 'id' => 14,
                 'name' => 'Dropdown',
                 'slug' => Str::slug('Dropdown'),
                 'resource' => 'sector',
-                'table' => 'sector_industry'
+                'table' => 'sector_industry',
+                'cate_name' => 'Sector'
             ], [
                 'id' => 15,
                 'name' => 'Dropdown',
                 'slug' => Str::slug('Dropdown'),
                 'resource' => 'industry',
-                'table' => 'sector_industry'
+                'table' => 'sector_industry',
+                'cate_name' => 'Industry'
             ], [
                 'id' => 16,
                 'name' => 'Dropdown',
                 'slug' => Str::slug('Dropdown'),
                 'resource' => 'geography',
-                'table' => 'dropdown_list'
+                'table' => 'dropdown_list',
+                'cate_name' => 'Geography'
             ]
         ]);
     }

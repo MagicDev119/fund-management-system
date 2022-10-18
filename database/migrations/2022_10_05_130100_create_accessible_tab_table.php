@@ -17,6 +17,7 @@ class CreateAccessibleTabTable extends Migration
             $table->id();
             $table->string('name');
             $table->tinyInteger('order');
+            $table->boolean('isDefault')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

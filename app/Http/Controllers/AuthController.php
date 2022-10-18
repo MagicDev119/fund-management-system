@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\AdminRole;
+use App\Models\AccessibleTab;
+use App\Models\UserRole;
+use App\Models\FundFieldGroup;
+use App\Models\FundField;
+use App\Models\AssetField;
+use App\Models\AssetFieldGroup;
 use Validator;
 
 class AuthController extends Controller
@@ -41,9 +47,70 @@ class AuthController extends Controller
         if($user->save()){
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->plainTextToken;
+            
+            $defaultAccessibleTabs = AccessibleTab::getDefaults();
+            $defaultUserRoles = UserRole::getDefaults();
+            $defaultFundFieldGroups = FundFieldGroup::getDefaults();
+            $defaultAssetFieldGroups = AssetFieldGroup::getDefaults();
 
+            foreach($defaultAccessibleTabs as $defaultAccessibleTab) {
+                $user->accessibleTabs()->attach($defaultAccessibleTab->id);
+            }
+
+            foreach($defaultUserRoles as $defaultUserRole) {
+                $user->userRoles()->attach($defaultUserRole->id);
+            }
+
+            foreach($defaultFundFieldGroups as $defaultFundFieldGroup) {
+                $userFundFieldGroup = [
+                    "group_name" => $defaultFundFieldGroup->group_name,
+                    "slug" => $defaultFundFieldGroup->slug,
+                    "user_id" => $user->id,
+                    "type" => 2
+                ];
+                $newFundFieldGroup = FundFieldGroup::create($userFundFieldGroup);
+
+                $fundFields = $defaultFundFieldGroup->fundFields()->get();
+                foreach($fundFields as $fundField) {
+                    $newFundField = [
+                        "group_id" => $newFundFieldGroup->id,
+                        "name" => $fundField->name,
+                        "slug" => $fundField->slug,
+                        "field_type_id" => $fundField->field_type_id,
+                        "isVisible" => $fundField->isVisible,
+                        'isRequired' => $fundField->isRequired
+                    ];
+                    FundField::create($newFundField);
+                }
+            }
+
+            foreach($defaultAssetFieldGroups as $defaultAssetFieldGroup) {
+                $userAssetFieldGroup = [
+                    "group_name" => $defaultAssetFieldGroup->group_name,
+                    "slug" => $defaultAssetFieldGroup->slug,
+                    "user_id" => $user->id,
+                    "type" => 2
+                ];
+                $newAssetFieldGroup = AssetFieldGroup::create($userAssetFieldGroup);
+
+                $assetFields = $defaultAssetFieldGroup->assetFields()->get();
+                foreach($assetFields as $assetField) {
+                    $newAssetField = [
+                        "group_id" => $newAssetFieldGroup->id,
+                        "name" => $assetField->name,
+                        "slug" => $assetField->slug,
+                        "field_type_id" => $assetField->field_type_id,
+                        "isVisible" => $assetField->isVisible,
+                        'isRequired' => $assetField->isRequired
+                    ];
+                    AssetField::create($newAssetField);
+                }
+            }
+
+            Auth::login($user);
+            
             return response()->json([
-                'accessToken' =>$token,
+                'accessToken' => $token,
                 'token_type' => 'Bearer',
                 "userData" => [
                     'email' => $request->email,
@@ -54,8 +121,10 @@ class AuthController extends Controller
                     'accessibleFunds' => $user->accessibleFunds(),
                     'accessibleAssets' => $user->accessibleAssets(),
                     'ability' => [
-                        'action' => 'manage',
-                        'subject' => 'Auth'
+                        [
+                            'action' => 'manage',
+                            'subject' => 'Auth'
+                        ]
                     ]
                 ]
             ],201);

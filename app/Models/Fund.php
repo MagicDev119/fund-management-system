@@ -9,6 +9,14 @@ class Fund extends Model
 {
     use HasFactory;
     protected $table = 'fund';
+
+    protected $fillable = [
+        'name',
+        'slug',
+        'fund_type_id',
+        'currency',
+        'legal_name'
+    ];
     
     public function users()
     {
@@ -22,11 +30,18 @@ class Fund extends Model
 
     public function fundFieldGroups()
     {
-        return $this->hasMany(FundFieldGroup::class);
+        return $this->hasMany(FundFieldGroup::class)
+                    ->where(function ($query) {
+                        $query->where('fund_field_group.isVisible', true);
+                    });
     }
 
     public function fundType()
     {
         return $this->belongsTo(FundType::class);
+    }
+
+    public function assets() {
+        return $this->belongsToMany(Asset::class, 'fund_portfolio_relation', 'fund_id', 'asset_id');
     }
 }

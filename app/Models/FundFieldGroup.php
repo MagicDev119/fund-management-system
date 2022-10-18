@@ -10,6 +10,14 @@ class FundFieldGroup extends Model
     use HasFactory;
     protected $table = 'fund_field_group';
 
+    protected $fillable = [
+        'group_name',
+        'type',
+        'isVisible',
+        'slug',
+        'fund_id',
+        'user_id'
+    ];
     /**
      * Get the user that owns the fundFieldGroup.
      */
@@ -29,5 +37,11 @@ class FundFieldGroup extends Model
     public function fund()
     {
         return $this->belongsTo(Fund::class);
+    }
+
+    public static function getDefaults()
+    {
+        $defaultFundFieldGroups = FundFieldGroup::where('type', 1)->get();
+        return $defaultFundFieldGroups;
     }
 }

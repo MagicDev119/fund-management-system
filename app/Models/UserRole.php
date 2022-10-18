@@ -14,4 +14,10 @@ class UserRole extends Model
     {
         return $this->belongsToMany(User::class, 'user_role_relation', 'role_id', 'user_id');
     }
+
+    public static function getDefaults()
+    {
+        $defaultRoles = UserRole::where('isDefault', true)->get();
+        return $defaultRoles;
+    }
 }

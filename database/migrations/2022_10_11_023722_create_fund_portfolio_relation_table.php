@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAssetTable extends Migration
+class CreateFundPortfolioRelationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateAssetTable extends Migration
      */
     public function up()
     {
-        Schema::create('asset', function (Blueprint $table) {
+        Schema::create('fund_portfolio_relation', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->string('name');
-            $table->string('legal_name');
-            $table->string('slug');
-            $table->boolean('isLocked')->default(2); // 1:unLocked 2:locked
+            $table->foreignId('fund_id')->constrained('fund');
+            $table->foreignId('asset_id')->constrained('asset');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -32,6 +29,6 @@ class CreateAssetTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asset');
+        Schema::dropIfExists('fund_portfolio_relation');
     }
 }

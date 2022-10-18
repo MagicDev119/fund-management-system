@@ -32,10 +32,19 @@
             </div>
 
             <b-list-group class="mt-1 list-group-labels">
-              <b-list-group-item v-for="tag in taskTags" :key="tag.title + $route.path" :to="tag.route"
-                :active="isDynamicRouteActive(tag.route)" @click="$emit('close-left-sidebar')">
-                <feather-icon icon="MenuIcon" size="18" class="mr-75" />
-                <span>{{ tag.title }}</span>
+              <b-list-group-item class="d-flex align-items-center" v-for="group in groupList"
+                :key="group.slug + $route.path" :to="group.route" :active="isDynamicRouteActive(group.route)"
+                @click="$emit('close-left-sidebar')">
+                <feather-icon icon="MenuIcon" size="18" class="mr-75 text-secondary" />
+                <span class="d-flex flex-column">
+                  <span class="d-flex align-items-center">
+                    <feather-icon icon="ApertureIcon" size="18" class="mr-25" />
+                    {{ group.name }}
+                  </span>
+                  <span class="text-secondary">
+                    <small>There are {{ group.fieldCnt }} fields.</small>
+                  </span>
+                </span>
               </b-list-group-item>
             </b-list-group>
 
@@ -45,8 +54,9 @@
     </div>
 
     <!-- modal new group-->
-    <b-modal id="modal-new-group" cancel-variant="outline-secondary" ok-title="Create" cancel-title="Close" centered
-      title="Create new group" @show="resetModal" @hidden="resetModal" @ok="handleCreateNewGroup">
+    <b-modal id="modal-new-group" ref="modal-new-group" cancel-variant="outline-secondary" ok-title="Create"
+      cancel-title="Close" centered title="Create new group" @show="resetModal" @hidden="resetModal"
+      @ok="handleCreateNewGroup">
       <b-form>
         <b-form-group :state="nameState" label="Name" label-for="name-input" invalid-feedback="Name is required">
           <b-form-input id="name-input" v-model="name" :state="nameState" required />
@@ -61,6 +71,9 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import { BButton, BListGroup, BListGroupItem, BLink, BModal, BForm, BFormGroup, BFormInput, VBModal } from 'bootstrap-vue'
 import { isDynamicRouteActive } from '@core/utils/utils'
 import Ripple from 'vue-ripple-directive'
+import {
+  ref, computed
+} from '@vue/composition-api'
 
 export default {
   directives: {
@@ -79,7 +92,7 @@ export default {
     VuePerfectScrollbar,
   },
   props: {
-    taskTags: {
+    fieldGroups: {
       type: Array,
       required: true,
     },
@@ -87,39 +100,45 @@ export default {
   directives: {
     'b-modal': VBModal,
   },
+  data() {
+    return {
+      name: '',
+      nameState: null
+    }
+  },
   methods: {
     resetModal() {
       this.name = ''
       this.nameState = null
     },
-    handleCreateNewGroup(bvModalEvt) {
-      // Prevent modal from closing
-      bvModalEvt.preventDefault()
-      // Trigger submit handler
-      this.handleSubmit()
-    },
-    handleSubmit() {
-
-      // this.submittedNames.push(this.name)
-
+    handleCreateNewGroup() {
+      this.$http.post('/api/asset/field/group', { name: this.name })
+        .then(res => {
+          if (res.data && res.data.id) {
+            this.groupList.push({
+              name: res.data.group_name,
+              slug: res.data.slug,
+              id: res.data.id,
+              fieldCnt: 0,
+              route: { name: 'asset-inputsetting-group', params: { group_slug: res.data.slug } }
+            })
+          }
+          this.$refs['modal-new-group'].hide()
+        })
     }
   },
-  setup() {
+  setup(props) {
+
+    const groupList = ref(computed(() => props.fieldGroups))
+
     const perfectScrollbarSettings = {
       maxScrollbarLength: 60,
     }
 
-    const taskFilters = [
-      { title: 'My Task', icon: 'MailIcon', route: { name: 'apps-todo' } },
-      { title: 'Important', icon: 'StarIcon', route: { name: 'apps-todo-filter', params: { filter: 'important' } } },
-      { title: 'Completed', icon: 'CheckIcon', route: { name: 'apps-todo-filter', params: { filter: 'completed' } } },
-      { title: 'Deleted', icon: 'TrashIcon', route: { name: 'apps-todo-filter', params: { filter: 'deleted' } } },
-    ]
-
     return {
       perfectScrollbarSettings,
-      taskFilters,
       isDynamicRouteActive,
+      groupList
     }
   },
 }

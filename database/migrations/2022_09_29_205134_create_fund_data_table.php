@@ -16,7 +16,7 @@ class CreateFundDataTable extends Migration
         Schema::create('fund_data', function (Blueprint $table) {
             $table->id();
             $table->foreignId('fund_field_id')->constrained('fund_field');
-            $table->text('value');
+            $table->text('value')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -8,11 +8,11 @@ export default {
     showFundDropdown: false,
     showPortfolioDropdown: false,
     showDateDropdown: false,
-    showDateQuaterDropdown: false,
+    showDateQuarterDropdown: false,
     selectedFund: null,
     selectedPortfolio: null,
-    selectedDate: new Date(),
-    selectedDateQuater: new Date()
+    selectedDate: (new Date()).getFullYear() + '-' + ('0' + ((new Date()).getMonth() + 1)).slice(-2) + '-' + ('0' + (new Date()).getDate()).slice(-2),
+    selectedDateQuarter: (new Date()).getFullYear() + '-' + ('0' + ((new Date()).getMonth() + 1)).slice(-2) + '-' + ('0' + (new Date()).getDate()).slice(-2)
   },
   getters: {
     currentBreakPoint: state => {
@@ -40,10 +40,11 @@ export default {
     SHOW_DATE_DROPDOWN(state, val) {
       state.showDateDropdown = val !== undefined ? val : state.showDateDropdown
     },
-    SHOW_DATE_QUATER_DROPDOWN(state, val) {
-      state.showDateQuaterDropdown = val !== undefined ? val : state.showDateQuaterDropdown
+    SHOW_DATE_QUARTER_DROPDOWN(state, val) {
+      state.showDateQuarterDropdown = val !== undefined ? val : state.showDateQuarterDropdown
     },
     SELECTED_FUND(state, val) {
+      console.log('selectedFund', val)
       state.selectedFund = val !== undefined ? val : state.selectedFund
     },
     SELECTED_PORTFOLIO(state, val) {
@@ -52,18 +53,18 @@ export default {
     SELECTED_DATE(state, val) {
       state.selectedDate = val !== undefined ? val : state.selectedDate
     },
-    SELECTED_DATEQUATER(state, val) {
-      state.selectedDateQuater = val !== undefined ? val : state.selectedDateQuater
+    SELECTED_DATEQUARTER(state, val) {
+      state.selectedDateQuarter = val !== undefined ? val : state.selectedDateQuarter
     },
     INIT_NAV_STATE(state) {
       state.showFundDropdown = false
       state.showPortfolioDropdown = false
       state.showDateDropdown = false
-      state.showDateQuaterDropdown = false
+      state.showDateQuarterDropdown = false
       state.selectedFund = null
       state.selectedPortfolio = null
-      state.selectedDate = new Date()
-      state.selectedDateQuater = new Date()
+      state.selectedDate = (new Date()).getFullYear() + '-' + ('0' + ((new Date()).getMonth() + 1)).slice(-2) + '-' + ('0' + (new Date()).getDate()).slice(-2)
+      state.selectedDateQuarter = (new Date()).getFullYear() + '-' + ('0' + ((new Date()).getMonth() + 1)).slice(-2) + '-' + ('0' + (new Date()).getDate()).slice(-2)
     }
   },
   actions: {},

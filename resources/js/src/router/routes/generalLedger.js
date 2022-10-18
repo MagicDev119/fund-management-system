@@ -6,6 +6,7 @@ export default [
     meta: {
       action: 'manage',
       resource: 'Auth',
+      show: ['fund'],
       pageTitle: 'Edit GL',
       breadcrumb: [
         {

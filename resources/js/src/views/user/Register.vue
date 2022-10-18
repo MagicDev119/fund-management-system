@@ -148,6 +148,7 @@ import { required, email } from '@validations'
 import { togglePasswordVisibility } from '@core/mixins/ui/forms'
 import store from '@/store/index'
 import useJwt from '@/auth/jwt/useJwt'
+import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 
 export default {
   components: {
@@ -210,8 +211,21 @@ export default {
             useJwt.setToken(response.data.accessToken)
             // useJwt.setRefreshToken(response.data.refreshToken)
             localStorage.setItem('userData', JSON.stringify(response.data.userData))
+            localStorage.setItem('accessToken', response.data.accessToken)
             this.$ability.update(response.data.userData.ability)
-            this.$router.push('/')
+
+            this.$router.replace({ name: 'fund-dashboard' }).then(() => {
+              this.$toast({
+                component: ToastificationContent,
+                position: 'top-right',
+                props: {
+                  title: `Welcome ${userData.firstName} ${userData.lastName}`,
+                  icon: 'CoffeeIcon',
+                  variant: 'success',
+                  text: `You have successfully logged in. Now you can start to explore!`,
+                },
+              })
+            })
           })
             .catch(error => {
               console.log(error)

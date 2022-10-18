@@ -15,12 +15,11 @@
       <dark-Toggler class="d-none d-lg-block" />
     </div>
 
-    <b-navbar-nav class="nav align-items-center ml-auto" v-if={showFund}>
-      {{ showFund }}
-      <fund-dropdown />
-      <!-- <portfolio-dropdown /> -->
-      <date-time />
-      <!-- <date-quater /> -->
+    <b-navbar-nav class="nav align-items-center ml-auto">
+      <fund-dropdown v-if="showFund" />
+      <portfolio-dropdown v-if="showPortfolio" />
+      <date-time v-if="showDate" />
+      <date-quarter v-if="showDateQuarter" />
       <template #button-content>
         <b-button v-ripple.400="'rgba(255, 255, 255, 0.15)'" variant="primary" class="btn-icon">
           <feather-icon icon="SettingsIcon" />
@@ -66,8 +65,8 @@ import DarkToggler from '@core/layouts/components/app-navbar/components/DarkTogg
 import useJwt from '@/auth/jwt/useJwt'
 import FundDropdown from './FundDropdown.vue'
 import DateTime from './DateTime.vue'
-// import PortfolioDropdown from './PortfolioDropdown.vue'
-// import DateQuater from './DateQuater.vue'
+import PortfolioDropdown from './PortfolioDropdown.vue'
+import DateQuarter from './DateQuarter.vue'
 import { initialAbility } from '@/libs/acl/config'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import store from '@/store'
@@ -80,7 +79,9 @@ export default {
     BDropdownDivider,
     BAvatar,
     FundDropdown,
+    PortfolioDropdown,
     DateTime,
+    DateQuarter,
 
     // Navbar Components
     DarkToggler,
@@ -88,7 +89,10 @@ export default {
   data() {
     return {
       userData: JSON.parse(localStorage.getItem('userData')),
-      showFund: false
+      showFund: false,
+      showPortfolio: false,
+      showDate: false,
+      showDateQuarter: false
     }
   },
   props: {
@@ -105,12 +109,10 @@ export default {
             'Authorization': localStorage.getItem('accessToken')
           }
         }).then(response => {
-          console.log('logout')
           const { userData } = response.data
           useJwt.setToken(null)
           localStorage.clear()
           this.$ability.update(initialAbility)
-          console.log('logout')
           this.$router.replace({ name: 'user-login' }).then(() => {
             this.$toast({
               component: ToastificationContent,
@@ -133,8 +135,31 @@ export default {
       })
     }
   },
-  created() {
-    this.showFund = store.state.app.showFundDropdown
+  watch: {
+    '$store.state.app.showFundDropdown': {
+      handler() {
+        this.showFund = store.state.app.showFundDropdown
+      },
+      immediate: true
+    },
+    '$store.state.app.showPortfolioDropdown': {
+      handler() {
+        this.showPortfolio = store.state.app.showPortfolioDropdown
+      },
+      immediate: true
+    },
+    '$store.state.app.showDateDropdown': {
+      handler() {
+        this.showDate = store.state.app.showDateDropdown
+      },
+      immediate: true
+    },
+    '$store.state.app.showDateQuarterDropdown': {
+      handler() {
+        this.showDateQuarter = store.state.app.showDateQuarterDropdown
+      },
+      immediate: true
+    }
   }
 }
 </script>

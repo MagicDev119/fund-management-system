@@ -32,12 +32,24 @@ Route::group(['prefix' => 'auth'], function () {
     });
 });
 
+Route::get('/asset/{:fund_id}/{:date}', [AssetController::class, 'index']);
+
 Route::resource('fund', FundController::class);
-Route::resource('fund/field', FundFieldController::class);
+Route::resource('fund/{fundFieldGroup}/field', FundFieldController::class)->only([
+  'store', 'index'
+]);
 Route::resource('fund/field/group', FundFieldGroupController::class);
+Route::resource('fund/field', FundFieldController::class)->only([
+  'update', 'destroy'
+]);
 
 Route::resource('asset', AssetController::class);
-Route::resource('asset/field', AssetFieldController::class);
+Route::resource('asset/{assetFieldGroup}/field', AssetFieldController::class)->only([
+  'store', 'index'
+]);
 Route::resource('asset/field/group', AssetFieldGroupController::class);
+Route::resource('asset/field', AssetFieldController::class)->only([
+  'update', 'destroy'
+]);
 
 Route::resource('gl', GeneralLedgerController::class);

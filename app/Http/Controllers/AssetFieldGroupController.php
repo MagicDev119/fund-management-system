@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
+use \App\models\FieldType;
 
 class AssetFieldGroupController extends Controller
 {
@@ -23,7 +27,17 @@ class AssetFieldGroupController extends Controller
      */
     public function index()
     {
-        //
+        $fieldGroups = [];
+        foreach(Auth::user()->assetFieldGroups as $key => $value) {
+            $value['fieldCnt'] = count($value->assetFields);
+            $fieldGroups[] = $value;
+        }
+        $fieldType = FieldType::get();
+
+        return response()->json([
+            'fieldGroups' => $fieldGroups,
+            'fieldType' => $fieldType
+        ]);
     }
 
     /**
@@ -44,7 +58,20 @@ class AssetFieldGroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validationData = $request->validate([
+            'name' => 'required|string'
+        ]);
+
+        $assetFieldGroup = Auth::user()->assetFieldGroups()
+                                ->create([
+                                    'group_name' => $request->name,
+                                    'type' => 2,
+                                    'isVisible' => true,
+                                    'slug' => Str::slug($request->name) . '-' . rand(1111, 9999)
+                                ]);
+
+
+        return response()->json($assetFieldGroup);
     }
 
     /**

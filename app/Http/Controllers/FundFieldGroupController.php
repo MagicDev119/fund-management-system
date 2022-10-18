@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
+use \App\models\FieldType;
 
 class FundFieldGroupController extends Controller
 {
@@ -23,8 +27,17 @@ class FundFieldGroupController extends Controller
      */
     public function index()
     {
-        $userSetFieldGroup = Auth::user()->fundFieldGroup;
-        return $userSetFieldGroup;
+        $fieldGroups = [];
+        foreach(Auth::user()->fundFieldGroups as $key => $value) {
+            $value['fieldCnt'] = count($value->fundFields);
+            $fieldGroups[] = $value;
+        }
+        $fieldType = FieldType::get();
+
+        return response()->json([
+            'fieldGroups' => $fieldGroups,
+            'fieldType' => $fieldType
+        ]);
     }
 
     /**
@@ -45,7 +58,20 @@ class FundFieldGroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validationData = $request->validate([
+            'name' => 'required|string'
+        ]);
+
+        $fundFieldGroup = Auth::user()->fundFieldGroups()
+                                ->create([
+                                    'group_name' => $request->name,
+                                    'type' => 2,
+                                    'isVisible' => true,
+                                    'slug' => Str::slug($request->name) . '-' . rand(1111, 9999)
+                                ]);
+
+
+        return response()->json($fundFieldGroup);
     }
 
     /**

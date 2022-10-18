@@ -1,10 +1,13 @@
 <template>
   <b-nav-item-dropdown id="dropdown-grouped" variant="link" class="dropdown-language" right>
-    <template #button-content>
+    <template #button-content v-if="currentFund">
       <feather-icon size="21" :icon="`BriefcaseIcon`" />
       <span class="ml-50 text-body">{{ currentFund.name }}</span>
     </template>
-    <b-dropdown-item v-for="fund in funds" :key="fund.locale" @click="selectFund(fund)">
+    <b-dropdown-item @click="selectFund(selectAll)">
+      <span class="ml-50">{{ selectAll.name }}</span>
+    </b-dropdown-item>
+    <b-dropdown-item v-for="fund in funds" :key="fund.id" @click="selectFund(fund)">
       <span class="ml-50">{{ fund.name }}</span>
     </b-dropdown-item>
   </b-nav-item-dropdown>
@@ -12,6 +15,7 @@
 
 <script>
 import { BNavItemDropdown, BDropdownItem, BImg } from 'bootstrap-vue'
+import store from '@/store'
 
 export default {
   components: {
@@ -26,44 +30,34 @@ export default {
   },
   data() {
     return {
-      selectedFund: this.funds[0],
+      selectedFund: null,
+      funds: [],
+      selectAll: {
+        id: 'all',
+        name: 'Select All'
+      }
     };
   },
   methods: {
     selectFund(fund) {
+      store.commit('app/SELECTED_FUND', fund)
       this.selectedFund = fund
     }
   },
-  setup() {
-    /* eslint-disable global-require */
-    const funds = [
-      {
-        locale: 'en',
-        img: require('@/assets/images/flags/en.png'),
-        name: 'English',
-      },
-      {
-        locale: 'fr',
-        img: require('@/assets/images/flags/fr.png'),
-        name: 'French',
-      },
-      {
-        locale: 'de',
-        img: require('@/assets/images/flags/de.png'),
-        name: 'German',
-      },
-      {
-        locale: 'pt',
-        img: require('@/assets/images/flags/pt.png'),
-        name: 'Portuguese',
-      },
-    ]
-    /* eslint-disable global-require */
-
-    return {
-      funds,
-    }
+  created() {
+    this.$http.get('/api/fund')
+      .then(res => {
+        this.funds = res.data
+        store.commit('app/SELECTED_FUND', this.funds[0])
+        this.selectedFund = this.funds[0]
+      })
   },
+  watch: {
+    $route(to, from) {
+      store.commit('app/SELECTED_FUND', this.funds[0])
+      this.selectedFund = this.funds[0]
+    }
+  }
 }
 </script>
 

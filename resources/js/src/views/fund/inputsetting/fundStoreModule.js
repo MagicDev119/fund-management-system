@@ -6,66 +6,25 @@ export default {
   getters: {},
   mutations: {},
   actions: {
-    fetchTasks(ctx, payload) {
-      return new Promise((resolve, reject) => {
-        axios
-          .get('/apps/todo/tasks', { params: payload })
-          .then(response => resolve({data: [
-    {
-      id: 1,
-      title: 'Entire change break our wife wide it daughter mention member.',
-      dueDate: '2020-11-25',
-      description:
-        '<p>Chocolate cake topping bonbon jujubes donut sweet wafer. Marzipan gingerbread powder brownie bear claw. Chocolate bonbon sesame snaps jelly caramels oat cake.</p>',
-      assignee: {
-        fullName: 'Jacob Ramirez',
-        avatar: require('@/assets/images/avatars/12.png'),
-      },
-      tags: ['update'],
-      isCompleted: false,
-      isDeleted: false,
-      isImportant: false,
-    },{
-      id: 2,
-      title: 'Entire change break our wife wide it daughter mention member.',
-      dueDate: '2020-11-25',
-      description:
-        '<p>Chocolate cake topping bonbon jujubes donut sweet wafer. Marzipan gingerbread powder brownie bear claw. Chocolate bonbon sesame snaps jelly caramels oat cake.</p>',
-      assignee: {
-        fullName: 'Jacob Ramirez',
-        avatar: require('@/assets/images/avatars/12.png'),
-      },
-      tags: ['update'],
-      isCompleted: false,
-      isDeleted: false,
-      isImportant: false,
-    }]}))
-          .catch(error => reject(error))
-      })
+    fetchFundFields(ctx, payload) {
+        return axios
+          .get('/api/fund/' + payload.id + '/field')
     },
-    addTask(ctx, taskData) {
-      return new Promise((resolve, reject) => {
-        axios
-          .post('/apps/todo/tasks', { task: taskData })
-          .then(response => resolve(response))
-          .catch(error => reject(error))
-      })
+    addFundField(ctx, payload) {
+      return axios
+          .post('/api/fund/' + payload.id + '/field', payload)
     },
-    updateTask(ctx, { task }) {
-      return new Promise((resolve, reject) => {
-        axios
-          .post(`/apps/todo/tasks/${task.id}`, { task })
-          .then(response => resolve(response))
-          .catch(error => reject(error))
-      })
+    updateFundField(ctx, fundFieldData) {
+      return axios
+          .put(`/api/fund/field/${fundFieldData.id}`, fundFieldData)
     },
-    removeTask(ctx, { id }) {
-      return new Promise((resolve, reject) => {
-        axios
-          .delete(`/apps/todo/tasks/${id}`)
-          .then(response => resolve(response))
-          .catch(error => reject(error))
-      })
+    removeFundField(ctx, { id }) {
+      return axios
+          .delete(`/api/fund/field/${id}`)
+    },
+    fetchFundFieldGroups(ctx, payload) {
+      return axios
+          .get('/api/fund/field/group', { params: payload })
     },
   },
 }

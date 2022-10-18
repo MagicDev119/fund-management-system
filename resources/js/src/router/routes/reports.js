@@ -25,6 +25,7 @@ export default [
     meta: {
       action: 'manage',
       resource: 'Auth',
+      show: ['portfolio', 'date'],
       pageTitle: 'Tearsheet',
       breadcrumb: [
         {
@@ -44,6 +45,7 @@ export default [
     meta: {
       action: 'manage',
       resource: 'Auth',
+      show: ['portfolio', 'quarter'],
       pageTitle: 'Custom',
       breadcrumb: [
         {

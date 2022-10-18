@@ -6,6 +6,7 @@ export default [
     meta: {
       action: 'manage',
       resource: 'Auth',
+      show: ['fund', 'date'],
       pageTitle: 'Track Record',
       breadcrumb: [
         {
@@ -25,6 +26,7 @@ export default [
     meta: {
       action: 'manage',
       resource: 'Auth',
+      show: ['fund', 'quarter'],
       pageTitle: 'Cashflows',
       breadcrumb: [
         {
@@ -44,6 +46,7 @@ export default [
     meta: {
       action: 'manage',
       resource: 'Auth',
+      show: ['fund', 'date'],
       pageTitle: 'Fund KPIs',
       breadcrumb: [
         {

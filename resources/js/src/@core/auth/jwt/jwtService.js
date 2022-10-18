@@ -1,5 +1,5 @@
 import jwtDefaultConfig from './jwtDefaultConfig'
-
+import { initialAbility } from '@/libs/acl/config'
 export default class JwtService {
   // Will be used by this service for making API calls
   axiosIns = null
@@ -104,8 +104,14 @@ export default class JwtService {
   }
 
   refreshToken() {
-    return this.axiosIns.post(this.jwtConfig.refreshEndpoint, {
-      refreshToken: this.getRefreshToken(),
-    })
+
+    localStorage.setItem(this.jwtConfig.storageTokenKeyName, null)
+    localStorage.clear()
+    this.$ability.update(initialAbility)
+    window.location.reload()
+
+    // return this.axiosIns.post(this.jwtConfig.refreshEndpoint, {
+    //   refreshToken: this.getRefreshToken(),
+    // })
   }
 }

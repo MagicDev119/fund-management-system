@@ -5,6 +5,7 @@ export default [
     component: () => import('@/views/companies/Portcos.vue'),
     meta: {
       action: 'manage',
+      show: ['fund', 'date'],
       resource: 'Auth'
     }
   },
@@ -16,6 +17,7 @@ export default [
       action: 'manage',
       resource: 'Auth',
       pageTitle: 'Company metrics',
+      show: ['portfolio'],
       breadcrumb: [
         {
           text: 'companies',

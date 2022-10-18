@@ -19,6 +19,7 @@ class AssetSeeder extends Seeder
 
         foreach ($assets as $asset) {
             $asset->accessibleUsers()->attach(\App\Models\User::get()->random()->id);
+            $asset->funds()->attach(\App\Models\Fund::get()->random()->id);
         }
     }
 }

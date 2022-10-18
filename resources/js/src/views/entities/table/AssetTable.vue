@@ -2,11 +2,11 @@
   <b-card-code title="List" class="position-relative">
     <!-- Add Button -->
     <div class="custom-search d-flex position-absolute position-top-0 position-right-0 mr-2 mt-1">
-      <b-link :to="{name:'fund-create'}" class="btn btn-primary">
+      <b-link :to="{name:'asset-create'}" class="btn btn-primary">
         Add
       </b-link>
 
-      <b-link class="ml-1 btn btn-primary py-0 d-flex align-items-center" :to="{name:'fund-inputsetting'}">
+      <b-link class="ml-1 btn btn-primary py-0 d-flex align-items-center" :to="{name:'asset-inputsetting'}">
         <feather-icon icon="SettingsIcon" class="" size="21" />
       </b-link>
     </div>
@@ -39,22 +39,16 @@
       <template slot="table-row" slot-scope="props">
 
         <!-- Column: Action -->
-        <span v-if="props.column.field === 'action'">
-          <span>
-            <b-dropdown variant="link" toggle-class="text-decoration-none" no-caret>
-              <template v-slot:button-content>
-                <feather-icon icon="MoreVerticalIcon" size="16" class="text-body align-middle mr-25" />
-              </template>
-              <b-dropdown-item>
-                <feather-icon icon="Edit2Icon" class="mr-50" />
-                <span>Edit</span>
-              </b-dropdown-item>
-              <b-dropdown-item>
-                <feather-icon icon="TrashIcon" class="mr-50" />
-                <span>Delete</span>
-              </b-dropdown-item>
-            </b-dropdown>
+        <span v-if="props.column.field === 'assets'">
+          <span v-for="asset in props.formattedRow[props.column.field]" :key="asset.id">
+            {{ asset.name }}
           </span>
+        </span><!-- Column: investment cost -->
+        <span v-else-if="props.column.field === 'current_investment_cost'">
+          0
+        </span><!-- Column: Ownership -->
+        <span v-else-if="props.column.field === 'current_ownership'">
+          0%
         </span>
 
         <!-- Column: Common -->
@@ -118,32 +112,34 @@ export default {
   },
   data() {
     return {
+      selectedFund: null,
+      selectedDate: null,
       pageLength: 3,
       dir: false,
       columns: [
         {
-          label: 'Vehicle Name',
+          label: 'Name',
           field: 'name',
-        },
-        {
-          label: 'Currency',
-          field: 'currency',
-        },
-        {
-          label: 'Vehicle Type',
-          field: 'type',
         },
         {
           label: 'Legal Name',
           field: 'legal_name',
         },
         {
-          label: 'Created_at',
-          field: 'created_at',
+          label: 'Investing entities',
+          field: 'assets',
         },
         {
-          label: 'Action',
-          field: 'action',
+          label: 'Current Investment Cost',
+          field: 'current_investment_cost',
+        },
+        {
+          label: 'Current ownership',
+          field: 'current_ownership',
+        },
+        {
+          label: 'Latest valuation date',
+          field: 'updated_at',
         },
       ],
       rows: [],
@@ -189,24 +185,44 @@ export default {
       return this.dir
     },
   },
-  created() {
-    this.$http.get('/api/fund')
-      .then(res => {
-        this.rows = res.data.map(each => {
-          each.type = each.fund_type.type
+  methods: {
+    getAssets() {
+      this.$http.get('/api/asset?fund_id=' + this.selectedFund.id + '&' + 'date=' + this.selectedDate)
+        .then(res => {
+          this.rows = res.data.map(each => {
+            const date = new Date(each.updated_at);
 
-          const date = new Date(each.created_at);
+            const year = date.toLocaleString("default", { year: "numeric" });
+            const month = date.toLocaleString("default", { month: "2-digit" });
+            const day = date.toLocaleString("default", { day: "2-digit" });
 
-          const year = date.toLocaleString("default", { year: "numeric" });
-          const month = date.toLocaleString("default", { month: "2-digit" });
-          const day = date.toLocaleString("default", { day: "2-digit" });
+            var formattedDate = year + "-" + month + "-" + day;
 
-          var formattedDate = year + "-" + month + "-" + day;
-
-          each.created_at = formattedDate
-          return each
+            each.updated_at = formattedDate
+            return each
+          })
         })
-      })
+    }
   },
+  watch: {
+    '$store.state.app.selectedFund': {
+      handler() {
+        this.selectedFund = store.state.app.selectedFund
+        if (this.selectedFund && this.selectedDate) {
+          this.getAssets()
+        }
+      },
+      immediate: true
+    },
+    '$store.state.app.selectedDate': {
+      handler() {
+        this.selectedDate = store.state.app.selectedDate
+        if (this.selectedDate && this.selectedFund) {
+          this.getAssets()
+        }
+      },
+      immediate: true
+    }
+  }
 }
 </script>

@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+use \App\Models\FundField;
+use \App\Models\FundFieldGroup;
 
 class FundFieldController extends Controller
 {
@@ -21,9 +25,10 @@ class FundFieldController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FundFieldGroup $fundFieldGroup)
     {
-        //
+        $fundFields = $fundFieldGroup->fundFields()->with('fieldType')->get();
+        return $fundFields;
     }
 
     /**
@@ -42,9 +47,23 @@ class FundFieldController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, FundFieldGroup $fundFieldGroup)
     {
-        //
+        $validationData = $request->validate([
+            'name' => 'required|string'
+        ]);
+
+        $fundField = $fundFieldGroup->fundFields()
+                                ->create([
+                                    'name' => $request->name,
+                                    'field_type_id' => $request->type,
+                                    'isRequired' => false,
+                                    'isVisible' => true,
+                                    'slug' => Str::slug($request->name) . '-' . rand(1111, 9999)
+                                ]);
+
+
+        return response()->json($fundField);
     }
 
     /**
@@ -78,7 +97,28 @@ class FundFieldController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $fundField = FundField::whereId($id);
+        $data = [];
+
+        if ($request->has('name')) {
+            $data['name'] = $request->name;
+        }
+        
+        if ($request->has('type')) {
+            $data['field_type_id'] = $request->type;
+        }
+        
+        if ($request->has('isVisible')) {
+            $data['isVisible'] = $request->isVisible;
+        }
+        
+        if ($request->has('isRequired')) {
+            $data['isRequired'] = $request->isRequired;
+        }
+
+        $fundField->update($data);
+
+        return response()->json($fundField);
     }
 
     /**
@@ -89,6 +129,10 @@ class FundFieldController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $fundField = FundField::whereId($id);
+
+        $fundField->delete();
+
+        return response()->json($fundField);
     }
 }

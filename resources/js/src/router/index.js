@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import axios from '@axios'
 
 import { canNavigate } from '@/libs/acl/routeProtection'
 import { isUserLoggedIn, getUserData, getHomeRouteForLoggedInUser } from '@/auth/utils'
@@ -85,8 +86,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, _, next) => {
   const isLoggedIn = isUserLoggedIn()
-console.log('----------------------')
-
+  store.commit('app/INIT_NAV_STATE')
   if (to.meta.show) {
     to.meta.show.forEach(each => {
       switch (each) {
@@ -99,17 +99,18 @@ console.log('----------------------')
         case 'date':
           store.commit('app/SHOW_DATE_DROPDOWN', true)
           break;
-        case 'quater':
-          store.commit('app/SHOW_DATE_QUATER_DROPDOWN', true)
+        case 'quarter':
+          store.commit('app/SHOW_DATE_QUARTER_DROPDOWN', true)
           break;
         default:
           break;
       }
     })
-  } else {
-    store.commit('app/INIT_NAV_STATE')
   }
-
+  if (to.name == 'home') {
+    return next({ name: 'user-login' })
+  }
+  
   if (to.meta.redirectIfLoggedIn && isLoggedIn) {
     const userData = getUserData()
     next({name: 'fund-dashboard'})
@@ -132,7 +133,9 @@ console.log('----------------------')
   //   const userData = getUserData()
   //   next(getHomeRouteForLoggedInUser(userData ? userData.role : null))
   // }
-
+  
+  // axios.get('/api/auth/user')
+  // .then((res) => console.log('aaaaaaaaaaaaaaa', res))
   return next()
 })
 

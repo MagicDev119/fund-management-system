@@ -14,4 +14,10 @@ class AccessibleTab extends Model
     {
         return $this->belongsToMany(User::class, 'user_accessible_tab_relation', 'accessible_tab_id', 'user_id');
     }
+
+    public static function getDefaults()
+    {
+        $defaultTabs = AccessibleTab::where('isDefault', true)->get();
+        return $defaultTabs;
+    }
 }
