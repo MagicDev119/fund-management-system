@@ -7,7 +7,7 @@
     <b-dropdown-item @click="selectAsset(selectAll)">
       <span class="ml-50">{{ selectAll.name }}</span>
     </b-dropdown-item>
-    <b-dropdown-group v-for="fund in funds" :key="fund.id" header="Group 1">
+    <b-dropdown-group v-for="fund in funds" :key="fund.id" :header="fund.name">
       <b-dropdown-item v-for="asset in fund.assets" :key="asset.id" @click="selectAsset(asset)">
         <span class="ml-50">{{ asset.name }}</span>
       </b-dropdown-item>

@@ -5,7 +5,7 @@ export default [
     component: () => import('@/views/companies/Portcos.vue'),
     meta: {
       action: 'manage',
-      show: ['fund', 'date'],
+      show: ['portfolio', 'date'],
       resource: 'Auth'
     }
   },
@@ -20,10 +20,48 @@ export default [
       show: ['portfolio'],
       breadcrumb: [
         {
-          text: 'companies',
+          text: 'Companies',
         },
         {
           text: 'Data.collection',
+          active: true,
+        },
+      ],
+    }
+  },
+  {
+    path: '/companies/spreadsheet/:selectedGroup',
+    name: 'companies-spreadsheet/:selectedGroup',
+    component: () => import('@/views/companies/Spreadsheet.vue'),
+    meta: {
+      action: 'manage',
+      resource: 'Auth',
+      pageTitle: 'Spreadsheet Mode',
+      breadcrumb: [
+        {
+          text: 'Companies',
+        },
+        {
+          text: 'Spreadsheet',
+          active: true,
+        },
+      ],
+    }
+  },
+  {
+    path: '/companies/managematrics/:selectedGroup',
+    name: 'companies-manage-matrics/:selectedGroup',
+    component: () => import('@/views/companies/ManageMatrics.vue'),
+    meta: {
+      action: 'manage',
+      resource: 'Auth',
+      pageTitle: 'Manage matrics',
+      breadcrumb: [
+        {
+          text: 'Companies',
+        },
+        {
+          text: 'Manage matrics',
           active: true,
         },
       ],

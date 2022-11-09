@@ -5,7 +5,7 @@
     <div class="mt-25 ml-2 d-flex justify-content-between">
       <span>
         <feather-icon icon="MenuIcon" size="18" class="mr-25" />
-        <span>aaa</span>
+        <span>{{ selectedGroup }}</span>
       </span>
       <b-link v-b-modal.modal-new-field class="d-flex align-items-center mb-1 cursor-pointer">
         <span class="p-25 text-white line-height-1 text-center rounded-pill bg-primary cart-item-count mr-50">
@@ -32,16 +32,16 @@
                 <span class="font-italic text-secondary">{{ fundField.field_type.name }}</span>
                 <div class="content-header-title pr-0 mx-1">&nbsp;</div>
                 <b-button v-if="fundField.isRequired" variant="outline-primary p-75 mr-1"
-                  @click="updateFundField({id: fundField.id, isRequired: !fundField.isRequired})">
+                  @click="updateFundField({ id: fundField.id, isRequired: !fundField.isRequired })">
                   <small class="font-weight-bolder">Required</small>
                 </b-button>
                 <b-button v-if="!fundField.isRequired" variant="outline-secondary p-75 mr-1" class="light-grey-button"
-                  @click="updateFundField({id: fundField.id, isRequired: !fundField.isRequired})">
+                  @click="updateFundField({ id: fundField.id, isRequired: !fundField.isRequired })">
                   <small>Required</small>
                 </b-button>
                 <div>
                   <b-form-checkbox v-model="fundField.isVisible" class="custom-control-primary" name="check-button"
-                    switch @change="updateFundField({id: fundField.id, isVisible: $event})">
+                    switch @change="updateFundField({ id: fundField.id, isVisible: $event })">
                     <span class="switch-icon-left">
                       <feather-icon icon="CheckIcon" />
                     </span>
@@ -59,7 +59,7 @@
 
           </li>
         </draggable>
-        <div class="no-results" :class="{'show': !fundFields.length}">
+        <div class="no-results" :class="{ 'show': !fundFields.length }">
           <h5>No Items Found</h5>
         </div>
       </vue-perfect-scrollbar>
@@ -68,7 +68,7 @@
     <!-- Sidebar -->
     <portal to="content-renderer-sidebar-left">
       <fund-input-setting-left-sidebar :field-groups="fieldGroups"
-        :is-fund-field-handler-sidebar-active.sync="isFundFieldHandlerSidebarActive" :class="{'show': true}" />
+        :is-fund-field-handler-sidebar-active.sync="isFundFieldHandlerSidebarActive" :class="{ 'show': true }" />
     </portal>
 
     <!-- modal new field-->
@@ -178,10 +178,14 @@ export default {
 
     const { route } = useRouter()
     const routeParams = computed(() => route.value.params)
+    const selectedGroup = ref('')
     watch(routeParams, () => {
 
       const selected = fieldGroups.value.filter(each => each.slug == routeParams.value.group_slug)
-      if (selected.length !== 0) fetchFundFields(selected[0].id);
+      if (selected.length !== 0) {
+        selectedGroup.value = selected[0].name
+        fetchFundFields(selected[0].id)
+      }
     })
 
     const fundFields = ref([])
@@ -276,6 +280,7 @@ export default {
               }
             })
             const selected = fieldGroups.value.filter(each => each.slug == routeParams.value.group_slug)
+            selectedGroup.value = selected.length === 0 ? fieldGroups.value[0].name : selected[0].name
             fetchFundFields(selected.length === 0 ? fieldGroups.value[0].id : selected[0].id);
           }
         })
@@ -295,6 +300,7 @@ export default {
       fetchFundFieldGroups,
       changeFieldName,
       changeFieldType,
+      selectedGroup,
       isFundFieldHandlerSidebarActive,
     }
   },

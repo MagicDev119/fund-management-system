@@ -15,7 +15,7 @@ class CreateDataFieldCategoriesTable extends Migration
     {
         Schema::create('data_field_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('asset_id')->constrained('asset');
+            $table->foreignId('asset_id')->nullable()->constrained('asset');
             $table->string('category_name');
             $table->tinyInteger('type')->default(1); // 1: default, 2: asset
             $table->boolean('isLocked')->default(2); // 1:unLocked 2:locked

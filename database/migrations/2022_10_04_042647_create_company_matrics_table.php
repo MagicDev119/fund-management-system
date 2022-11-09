@@ -16,10 +16,7 @@ class CreateCompanyMatricsTable extends Migration
         Schema::create('company_matrics', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained('data_field_categories');
-            $table->string('name');
-            $table->foreignId('matrics_category_id')->constrained('matrics_category');
-            $table->foreignId('matrics_unit_id')->constrained('matrics_unit');
-            $table->string('decimals');
+            $table->foreignId('matrics_resource_id')->constrained('matrics_resource');
             $table->softDeletes();
             $table->timestamps();
         });

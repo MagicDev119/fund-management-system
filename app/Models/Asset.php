@@ -35,4 +35,8 @@ class Asset extends Model
     public function user() {
         return $this->belongsTo(User::class);
     }
+
+    public function datacollection() {
+        return $this->hasMany(DataFieldCategories::class);
+    }
 }

@@ -16,8 +16,8 @@ class CreateAnalysisCommentTable extends Migration
         Schema::create('analysis_comment', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('asset_id')->constrained('asset');
-            $table->string('period');
+            $table->foreignId('data_field_category_id')->constrained('data_field_categories');
+            $table->string('period')->nullable();
             $table->text('content');
             $table->softDeletes();
             $table->timestamps();

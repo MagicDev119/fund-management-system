@@ -5,7 +5,7 @@
     <div class="mt-25 ml-2 d-flex justify-content-between">
       <span>
         <feather-icon icon="MenuIcon" size="18" class="mr-25" />
-        <span>aaa</span>
+        <span>{{ selectedGroup }}</span>
       </span>
       <b-link v-b-modal.modal-new-field class="d-flex align-items-center mb-1 cursor-pointer">
         <span class="p-25 text-white line-height-1 text-center rounded-pill bg-primary cart-item-count mr-50">
@@ -32,36 +32,36 @@
                 <span class="font-italic text-secondary">{{ assetField.field_type.name }}</span>
                 <div class="content-header-title pr-0 mx-1">&nbsp;</div>
                 <b-button v-if="assetField.isRequired" variant="outline-primary p-75 mr-1"
-                  @click="updateAssetField({id: assetField.id, isRequired: !assetField.isRequired})">
+                  @click="updateAssetField({       id: assetField.id, isRequired: !assetField.isRequired       })">
                   <small class="font-weight-bolder">Required</small>
                 </b-button>
                 <b-button v-if="!assetField.isRequired" variant="outline-secondary p-75 mr-1" class="light-grey-button"
-                  @click="updateAssetField({id: assetField.id, isRequired: !assetField.isRequired})">
+                  @click="updateAssetField({       id: assetField.id, isRequired: !assetField.isRequired       })">
                   <small>Required</small>
                 </b-button>
 
                 <b-button v-if="assetField.isEditable" variant="outline-primary p-75 mr-1"
-                  @click="updateAssetField({id: assetField.id, isEditable: !assetField.isEditable})">
+                  @click="updateAssetField({       id: assetField.id, isEditable: !assetField.isEditable       })">
                   <small class="font-weight-bolder">Editable on list page</small>
                 </b-button>
                 <b-button v-if="!assetField.isEditable" variant="outline-secondary p-75 mr-1" class="light-grey-button"
-                  @click="updateAssetField({id: assetField.id, isEditable: !assetField.isEditable})">
+                  @click="updateAssetField({       id: assetField.id, isEditable: !assetField.isEditable       })">
                   <small>Editable on list page</small>
                 </b-button>
 
                 <b-button v-if="assetField.isTimestampField" variant="outline-primary p-75 mr-1"
-                  @click="updateAssetField({id: assetField.id, isTimestampField: !assetField.isTimestampField})">
+                  @click="updateAssetField({       id: assetField.id, isTimestampField: !assetField.isTimestampField       })">
                   <small class="font-weight-bolder">Timestamp field</small>
                 </b-button>
                 <b-button v-if="!assetField.isTimestampField" variant="outline-secondary p-75 mr-1"
                   class="light-grey-button"
-                  @click="updateAssetField({id: assetField.id, isTimestampField: !assetField.isTimestampField})">
+                  @click="updateAssetField({       id: assetField.id, isTimestampField: !assetField.isTimestampField       })">
                   <small>Timestamp field</small>
                 </b-button>
 
                 <div>
                   <b-form-checkbox v-model="assetField.isVisible" class="custom-control-primary" name="check-button"
-                    switch @change="updateAssetField({id: assetField.id, isVisible: $event})">
+                    switch @change="updateAssetField({       id: assetField.id, isVisible: $event       })">
                     <span class="switch-icon-left">
                       <feather-icon icon="CheckIcon" />
                     </span>
@@ -79,7 +79,7 @@
 
           </li>
         </draggable>
-        <div class="no-results" :class="{'show': !assetFields.length}">
+        <div class="no-results" :class="{       'show': !assetFields.length       }">
           <h5>No Items Found</h5>
         </div>
       </vue-perfect-scrollbar>
@@ -88,7 +88,8 @@
     <!-- Sidebar -->
     <portal to="content-renderer-sidebar-left">
       <asset-input-setting-left-sidebar :field-groups="fieldGroups"
-        :is-asset-field-handler-sidebar-active.sync="isAssetFieldHandlerSidebarActive" :class="{'show': true}" />
+        :is-asset-field-handler-sidebar-active.sync="isAssetFieldHandlerSidebarActive"
+        :class="{       'show': true       }" />
     </portal>
 
     <!-- modal new field-->
@@ -199,9 +200,11 @@ export default {
 
     const { route } = useRouter()
     const routeParams = computed(() => route.value.params)
+    const selectedGroup = ref('')
     watch(routeParams, () => {
 
       const selected = fieldGroups.value.filter(each => each.slug == routeParams.value.group_slug)
+      selectedGroup.value = selected[0].name
       if (selected.length !== 0) fetchAssetFields(selected[0].id);
     })
 
@@ -295,6 +298,7 @@ export default {
               }
             })
             const selected = fieldGroups.value.filter(each => each.slug == routeParams.value.group_slug)
+            selectedGroup.value = selected.length === 0 ? fieldGroups.value[0].name : selected[0].name
             fetchAssetFields(selected.length === 0 ? fieldGroups.value[0].id : selected[0].id);
           }
         })
@@ -314,6 +318,7 @@ export default {
       fetchAssetFieldGroups,
       changeFieldName,
       changeFieldType,
+      selectedGroup,
       isAssetFieldHandlerSidebarActive,
     }
   },

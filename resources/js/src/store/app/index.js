@@ -23,6 +23,9 @@ export default {
       if (windowWidth >= $themeBreakpoints.sm) return 'sm'
       return 'xs'
     },
+    selectedPortfolio: state => {
+      return state.selectedPortfolio
+    }
   },
   mutations: {
     UPDATE_WINDOW_WIDTH(state, val) {

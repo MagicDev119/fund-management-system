@@ -30,7 +30,13 @@ class DatabaseSeeder extends Seeder
             AssetFieldSeeder::class,
             FundDataSeeder::class,
             AssetDataSeeder::class,
-
+            MatricsCategorySeeder::class,
+            MatricsUnitSeeder::class,
+            MatricsResourceSeeder::class,
+            DataFieldCategoriesSeeder::class,
+            CompanyMatricsSeeder::class,
+            CustomReportMatricsDataSeeder::class,
+            AnalysisCommentSeeder::class,
             GeneralLedgerSeeder::class
         ]);
     }

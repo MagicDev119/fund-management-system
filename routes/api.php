@@ -9,6 +9,8 @@ use App\Http\Controllers\FundFieldGroupController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AssetFieldController;
 use App\Http\Controllers\AssetFieldGroupController;
+use App\Http\Controllers\CompanyMatricsController;
+use App\Http\Controllers\DataFieldCategoriesController;
 use App\Http\Controllers\GeneralLedgerController;
 
 /*
@@ -51,5 +53,8 @@ Route::resource('asset/field/group', AssetFieldGroupController::class);
 Route::resource('asset/field', AssetFieldController::class)->only([
   'update', 'destroy'
 ]);
+Route::get('asset/{asset}/datacollection', [AssetController::class, 'datacollection']);
+Route::resource('company/matrics', CompanyMatricsController::class);
+Route::resource('asset/{asset}/matrics/category', DataFieldCategoriesController::class);
 
 Route::resource('gl', GeneralLedgerController::class);

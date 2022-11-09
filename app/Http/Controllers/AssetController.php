@@ -232,4 +232,9 @@ class AssetController extends Controller
     {
         //
     }
+
+    public function datacollection(Request $request, Asset $asset)
+    {
+        return response()->json($asset->datacollection()->with('companyMatrics.datas', 'companyMatrics.matricsResource', 'comments.user')->get());
+    }
 }

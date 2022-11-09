@@ -16,7 +16,7 @@ class CreateCustomReportMatricsDataTable extends Migration
         Schema::create('custom_report_matrics_data', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_matrics_id')->constrained('company_matrics');
-            $table->text('value');
+            $table->bigInteger('value');
             $table->date('set_date');
             $table->softDeletes();
             $table->timestamps();

@@ -15,11 +15,11 @@ class CreateMatricsResourceTable extends Migration
     {
         Schema::create('matrics_resource', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('user_id')->nullable()->constrained('users');
             $table->string('name');
             $table->foreignId('matrics_category_id')->constrained('matrics_category');
             $table->foreignId('matrics_unit_id')->constrained('matrics_unit');
-            $table->string('decimals');
+            $table->string('decimals')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
